@@ -14,7 +14,7 @@ import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.support.PropertyChainTranslator;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 import org.junit.Test;
 
 import static com.epimorphics.util.CollectionUtils.list;

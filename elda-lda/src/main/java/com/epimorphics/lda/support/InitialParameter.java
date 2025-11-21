@@ -14,11 +14,12 @@
 
 package com.epimorphics.lda.support;
 
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.iterator.SingletonIterator;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.StatementTerm;
+import org.apache.jena.util.iterator.SingletonIterator;
 
 import java.util.Iterator;
 
@@ -55,6 +56,11 @@ public class InitialParameter implements QuerySolution {
     @Override
     public Literal getLiteral(String varName) {
         return (Literal) get(varName);
+    }
+
+    @Override
+    public StatementTerm getStatementTerm(String varName) {
+        return get(varName).asStatementTerm();
     }
 
     @Override

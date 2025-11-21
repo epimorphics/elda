@@ -20,11 +20,11 @@ import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.restful.restlets.Catalogue;
 import com.epimorphics.sdx.vocabulary.DSV;
 import com.epimorphics.util.Util;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.*;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.*;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 public class CatalogueInJSON {
     private final SharedConfig config;

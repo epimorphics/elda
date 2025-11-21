@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.prefixes;
 
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
  * <p>

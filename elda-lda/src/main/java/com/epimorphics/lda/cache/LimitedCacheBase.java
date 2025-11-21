@@ -9,7 +9,7 @@ package com.epimorphics.lda.cache;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ResponseResult;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

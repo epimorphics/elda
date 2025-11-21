@@ -12,7 +12,7 @@ import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 
 import java.util.*;
 import java.util.regex.Matcher;

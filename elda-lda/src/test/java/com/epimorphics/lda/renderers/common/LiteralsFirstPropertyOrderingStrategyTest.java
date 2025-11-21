@@ -14,8 +14,8 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.PropertyValue;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.junit.Test;
 
 import java.util.List;

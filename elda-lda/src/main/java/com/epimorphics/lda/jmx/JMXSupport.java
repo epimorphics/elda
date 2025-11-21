@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.jmx;
 
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.shared.WrappedException;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;

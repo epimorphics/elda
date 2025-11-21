@@ -24,6 +24,7 @@
 	<target name="schemagen_command" unless="schemagen_${what}_UpToDate" depends="testUpToDate">
 		<java className="jena.schemagen" classPath="${classpath}" failonerror="true">
 			<arg value="-i" /> <arg value="${basedir}/../vocabs/${what}.ttl" />
+      <arg value="-e" /> <arg value="TURTLE" />
 			<arg value="-a" /> <arg value="${namespace}" />
 			<arg value="-o" /> <arg value="${src}/main/java/" />
 			<arg value="--package" /> <arg value="com.epimorphics.lda.vocabularies" />

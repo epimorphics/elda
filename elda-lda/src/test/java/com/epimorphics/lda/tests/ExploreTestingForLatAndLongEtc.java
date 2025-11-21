@@ -16,16 +16,16 @@ import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 import org.junit.Test;
 
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.resourceSet;
+import static org.apache.jena.rdf.model.test.ModelTestBase.resourceSet;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 

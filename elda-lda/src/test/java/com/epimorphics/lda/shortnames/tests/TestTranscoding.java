@@ -9,8 +9,8 @@
 package com.epimorphics.lda.shortnames.tests;
 
 import com.epimorphics.lda.shortnames.Transcoding;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.RDF;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

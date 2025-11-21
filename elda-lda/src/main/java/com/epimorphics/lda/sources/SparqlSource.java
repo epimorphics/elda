@@ -21,15 +21,20 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.shared.LockNone;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.apache.jena.rdfconnection.RDFConnectionRemote;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.shared.LockNone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.http.HttpClient;
 
 /**
  * Data source representing and external SPARQL endpoint.
@@ -48,6 +53,8 @@ public class SparqlSource extends SourceBase implements Source {
     protected final String basicUser;
 
     protected final char[] basicPassword;
+
+    protected final HttpClient httpClient;
 
     public SparqlSource(Resource ep, AuthMap am) {
         super(ep);
@@ -89,10 +96,21 @@ public class SparqlSource extends SourceBase implements Source {
                             + "\n and authAllowInsecure has not been specified."
                     );
         }
-        //
+
+        HttpClient.Builder builder = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1);
+        if (this.basicUser != null) {
+            builder.authenticator(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(basicUser, basicPassword);
+                }
+            });
+        }
+        this.httpClient = builder.build();
         log.info("created '{}'", this.toString());
     }
 
+    /*
     @Override
     public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) log.debug("running query on '{}':\n{}", sparqlEndpoint, query);
@@ -103,6 +121,16 @@ public class SparqlSource extends SourceBase implements Source {
             qe.setBasicAuthentication(basicUser, basicPassword);
         }
         return qe;
+    }
+    */
+
+    @Override
+    public QueryExecution execute(Query query) {
+        if (log.isDebugEnabled()) {
+            log.debug("running query on '{}':\n{}", sparqlEndpoint, query.toString());
+        }
+        RDFConnection remote = RDFConnectionRemote.newBuilder().httpClient(this.httpClient).queryEndpoint(sparqlEndpoint).build();
+        return remote.query(query);
     }
 
     @Override

@@ -14,8 +14,8 @@
 
 package com.epimorphics.lda.vocabularies;
 
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 public class XHV {
     public static final String ns = "http://www.w3.org/1999/xhtml/vocab#";

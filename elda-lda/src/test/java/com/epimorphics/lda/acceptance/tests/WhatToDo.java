@@ -6,7 +6,7 @@
 */
 package com.epimorphics.lda.acceptance.tests;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 import java.util.List;
 

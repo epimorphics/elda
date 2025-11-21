@@ -19,12 +19,12 @@ package com.epimorphics.lda.sources;
 
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.util.FileManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public class LocalSource extends SourceBase implements Source {
     protected final Model source;
     protected final String endpoint;
 
-    protected final Dataset sourceDataset = DatasetFactory.createMem();
+    protected final Dataset sourceDataset = DatasetFactory.create();
 
     public LocalSource(FileManager fm, Resource endpoint) {
         super(endpoint);

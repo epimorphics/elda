@@ -11,8 +11,8 @@ package com.epimorphics.lda.renderers.common;
 
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jena.atlas.lib.StrUtils;
 import org.slf4j.Logger;
@@ -292,7 +292,7 @@ public class PropertyPath {
                 }
             }
 
-            return StrUtils.strjoin(" ", correctlyCased);
+            return String.join(" ",  correctlyCased);
         } else {
             return name;
         }

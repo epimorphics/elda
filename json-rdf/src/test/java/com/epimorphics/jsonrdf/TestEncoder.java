@@ -55,16 +55,16 @@ import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
-import com.hp.hpl.jena.datatypes.xsd.impl.XSDDateTimeType;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.XSDDateTime;
+import org.apache.jena.datatypes.xsd.impl.XSDDateTimeType;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.OWL;
 
 public class TestEncoder {
 

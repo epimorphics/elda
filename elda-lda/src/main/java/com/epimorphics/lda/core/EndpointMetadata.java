@@ -20,13 +20,13 @@ import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.graph.compose.MultiUnion;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.ResourceUtils;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.graph.compose.MultiUnion;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.util.ResourceUtils;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 import java.net.URI;
 import java.util.*;
@@ -113,8 +113,10 @@ public class EndpointMetadata {
                     .addLiteral(OpenSearch.startIndex, perPage * page + 1)
             ;
 
-            if (totalResults != null)
-                thisMetaPage.addLiteral(OpenSearch.totalResults, totalResults.intValue());
+            if (totalResults != null) {
+                thisMetaPage.addLiteral(OpenSearch.totalResults,
+                        thisMetaPage.getModel().createTypedLiteral(totalResults));
+            }
 
             thisMetaPage.addProperty(API.items, content);
             Resource firstPage = URIUtils.adjustPageParameter(metaModel, fullURI, listEndpoint, 0);

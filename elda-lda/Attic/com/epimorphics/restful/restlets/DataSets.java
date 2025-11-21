@@ -15,17 +15,17 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.*;
 import com.epimorphics.html.util.SDX_Utils;
 import com.epimorphics.restful.support.CatalogueInJSON;
 import com.epimorphics.restful.support.SharedConfig;
 import com.epimorphics.sdx.system_state.ModelState;
 import com.epimorphics.sdx.vocabulary.DSV;
 import com.epimorphics.util.Util;
-import com.hp.hpl.jena.tdb.TDB;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.ResourceUtils;
+import org.apache.jena.tdb.TDB;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.util.ResourceUtils;
 
 @Path("/datasets/")
 public class DataSets {
@@ -120,7 +120,7 @@ public class DataSets {
     }
 
     private RDFNode getLabelFor(Resource r, String id) {
-        List<RDFNode> labels = r.listProperties(DC.title).mapWith(Statement.Util.getObject).toList();
+        List<RDFNode> labels = r.listProperties(DC.title).mapWith(Statement::getObject).toList();
         return labels.isEmpty() ? r.getModel().createLiteral(id) : labels.get(0);
     }
 

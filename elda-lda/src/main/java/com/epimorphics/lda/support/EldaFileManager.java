@@ -8,16 +8,17 @@
 
 package com.epimorphics.lda.support;
 
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.util.FileManager;
 
 public class EldaFileManager {
 
-    protected static FileManager instance = new FileManager();
+    protected static FileManager instance = FileManager.createStd();
 
-    static {
-        FileManager.setStdLocators(instance);
-    }
-
+    /**
+     * Get the singleton FileManager instance.
+     * @deprecated Use EldaStreamManager.get() instead.
+     */
+    @Deprecated()
     public static FileManager get() {
         return instance;
     }

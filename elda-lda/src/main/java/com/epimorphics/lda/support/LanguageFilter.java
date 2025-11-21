@@ -8,8 +8,11 @@
 
 package com.epimorphics.lda.support;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.impl.RDFLangString;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
@@ -32,7 +35,7 @@ public class LanguageFilter {
         Set<String> allowed = new HashSet<String>(Arrays.asList(split));
         if (allowed.contains("none")) allowed.add("");
         for (Resource sub : m.listSubjects().toList()) {
-            for (Property prop : sub.listProperties().mapWith(Statement.Util.getPredicate).toSet())
+            for (Property prop : sub.listProperties().mapWith(Statement::getPredicate).toSet())
                 removeUnwantedPropertyValues(allowed, sub, prop);
         }
     }
@@ -52,7 +55,9 @@ public class LanguageFilter {
             if (isStringLiteral(o)) {
                 String lang = o.getLiteralLanguage();
                 if (allowed.contains(lang)) hasLanguagedObjects = true;
-                else if (lang.equals("")) plains.add(s);
+                else if (lang.isEmpty()) {
+                    plains.add(s);
+                }
                 else removes.add(s);
             }
         }
@@ -62,6 +67,6 @@ public class LanguageFilter {
     }
 
     private static boolean isStringLiteral(Node o) {
-        return o.isLiteral() && o.getLiteralDatatypeURI() == null;
+        return o.isLiteral() && (RDFLangString.isRDFLangString(o.getLiteralDatatype())|| o.getLiteralDatatype() == XSDDatatype.XSDstring);
     }
 }

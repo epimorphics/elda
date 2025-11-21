@@ -7,7 +7,7 @@
 */
 package com.epimorphics.util;
 
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.shared.WrappedException;
 
 import java.io.IOException;
 import java.io.OutputStream;

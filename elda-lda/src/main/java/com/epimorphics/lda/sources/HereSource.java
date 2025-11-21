@@ -10,13 +10,13 @@ package com.epimorphics.lda.sources;
 
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.util.ResourceUtils;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.util.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

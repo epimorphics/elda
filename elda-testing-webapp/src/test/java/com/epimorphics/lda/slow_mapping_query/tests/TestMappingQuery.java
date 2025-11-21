@@ -3,7 +3,7 @@ package com.epimorphics.lda.slow_mapping_query.tests;
 import com.epimorphics.lda.systemtest.Util;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 

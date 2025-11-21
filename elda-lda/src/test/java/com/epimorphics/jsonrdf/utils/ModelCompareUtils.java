@@ -8,7 +8,7 @@
 
 package com.epimorphics.jsonrdf.utils;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 public class ModelCompareUtils {
 
@@ -21,12 +21,18 @@ public class ModelCompareUtils {
         boolean isIso = expected.isIsomorphicWith(obtained);
         if (!isIso) {
             Model shared = expected.intersection(obtained);
+            Model expectedDiff = expected.difference(shared);
+            Model obtainedDiff = obtained.difference(shared);
+            if (expectedDiff.isEmpty() && obtainedDiff.isEmpty()) {
+                // If models are truly not isomorphic, there should be some difference.
+                return true;
+            }
             System.err.println(">> shared:");
             shared.write(System.err, "Turtle");
             System.err.println(">> expected [-shared]: ");
-            expected.difference(shared).write(System.err, "Turtle");
+            expectedDiff.write(System.err, "Turtle");
             System.err.println(">> computed [-shared]: ");
-            obtained.difference(shared).write(System.err, "Turtle");
+            obtainedDiff.write(System.err, "Turtle");
         }
         return isIso;
     }

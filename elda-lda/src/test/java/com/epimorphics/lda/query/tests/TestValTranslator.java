@@ -18,11 +18,12 @@ import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class TestValTranslator {
         ShortnameService sns = new StandardShortnameService(root, noPrefixes, null);
         //
         ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
-        Any o = vt.objectForValue((String) null, "val", null);
+        Any o = vt.objectForValue(XSD.xstring.toString(), "val", null);
         assertEquals(RDFQ.literal("val"), o);
     }
 
@@ -85,7 +86,7 @@ public class TestValTranslator {
         //
         ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
         Any o = vt.objectForValue(API.SimpleLiteral.getURI(), "lexicalForm", null);
-        assertEquals(RDFQ.literal("lexicalForm", "", ""), o);
+        assertEquals(RDFQ.literal("lexicalForm", "", XSD.xstring.toString()), o);
     }
 
     @Test
@@ -96,7 +97,7 @@ public class TestValTranslator {
         //
         ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
         Any o = vt.objectForValue(API.SimpleLiteral.getURI(), "lexicalForm", "fr");
-        assertEquals(RDFQ.literal("lexicalForm", "", ""), o);
+        assertEquals(RDFQ.literal("lexicalForm", "", XSD.xstring.toString()), o);
     }
 
     @Test

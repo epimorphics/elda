@@ -12,8 +12,8 @@ package com.epimorphics.lda.renderers.common;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.jmock.imposters.ByteBuddyClassImposteriser;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;

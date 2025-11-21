@@ -9,7 +9,7 @@ package com.epimorphics.lda.support.tests;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;

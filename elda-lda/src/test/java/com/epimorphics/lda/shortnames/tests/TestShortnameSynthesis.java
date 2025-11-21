@@ -11,13 +11,13 @@ package com.epimorphics.lda.shortnames.tests;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.DC;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.RDF;
 import org.junit.Test;
 
 import java.util.Map;
@@ -78,7 +78,10 @@ public class TestShortnameSynthesis {
 
         Map<String, String> result = cc.Do(wild, prefixes);
 
-        assertEquals("y", result.get(NS1 + "x,y"));
+        // This is a change from the previous behaviour due to the way the IRI is split by Jena5
+        // Because the split localname now includes the comma, the result was an invalid shortname.
+        // With this release the implementation has been altered to escape invalid shortname characters with _{hex}_.
+        assertEquals("x_2c_y", result.get(NS1 + "x,y"));
     }
 
     @Test

@@ -14,8 +14,8 @@ import com.epimorphics.lda.exceptions.BadRequestException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QueryParseException;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QueryParseException;
 
 /**
  * ValTranslator handles the translation of the V in ?P=V

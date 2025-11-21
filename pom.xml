@@ -21,6 +21,7 @@
     <tempSCM>/tmp/tempSCM</tempSCM>
     <project.tagname/>
 
+    <ver.jena>5.6.0</ver.jena>
     <ver.junit>4.13.2</ver.junit>
     <ver.log4j>2.17.1</ver.log4j>
     <ver.lucene>7.1.0</ver.lucene>
@@ -44,6 +45,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
+          <version>3.3.1</version>
           <configuration>
             <encoding>UTF-8</encoding>
           </configuration>
@@ -67,6 +69,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.14.1</version>
           <configuration>
             <source>${jdk.version}</source>
             <target>${jdk.version}</target>
@@ -221,7 +224,7 @@
     <repository>
       <id>epi-public-s3-snapshot</id>
       <name>Epimorphics S3 snapshot repository</name>
-      <url>s3://epi-repository/snapshot</url>
+      <url>https://s3-eu-west-1.amazonaws.com/epi-repository/snapshot</url>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -233,7 +236,7 @@
     <repository>
       <id>epi-public-s3-release</id>
       <name>Epimorphics S3 release repository</name>
-      <url>s3://epi-repository/release</url>
+      <url>https://s3-eu-west-1.amazonaws.com/epi-repository/release</url>
       <releases>
         <enabled>true</enabled>
       </releases>

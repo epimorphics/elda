@@ -22,8 +22,8 @@ import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 

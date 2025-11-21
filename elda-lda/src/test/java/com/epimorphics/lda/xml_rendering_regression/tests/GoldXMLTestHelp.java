@@ -12,8 +12,8 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 
 import java.util.HashSet;
 import java.util.Set;

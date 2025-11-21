@@ -10,12 +10,12 @@ package com.epimorphics.lda.query.tests;
 
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.View.State;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 import org.junit.Test;
 
 import java.util.Arrays;

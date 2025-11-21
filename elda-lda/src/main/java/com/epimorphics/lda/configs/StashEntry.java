@@ -8,7 +8,7 @@
 package com.epimorphics.lda.configs;
 
 import com.epimorphics.lda.specs.APISpec;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 /**
  * A StashEntry records a single loaded config with its

@@ -20,12 +20,12 @@ package com.epimorphics.lda.tests;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.support.EldaFileManager;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.shared.NotFoundException;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.shared.NotFoundException;
+import org.apache.jena.vocabulary.RDFS;
 import org.junit.Test;
 
 import java.io.File;

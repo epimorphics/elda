@@ -10,7 +10,7 @@ package com.epimorphics.lda.tests_support;
 
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.support.EldaFileManager;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * A ModelLoaderI that loads the model using the FileManager.

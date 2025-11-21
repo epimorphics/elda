@@ -9,8 +9,8 @@
 package com.epimorphics.lda.renderers.tests;
 
 import com.epimorphics.lda.renderers.StripPrefixes;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

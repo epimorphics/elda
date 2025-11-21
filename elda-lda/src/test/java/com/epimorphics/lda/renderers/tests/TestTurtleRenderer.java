@@ -15,9 +15,9 @@ import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.TurtleRenderer;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.WrappedException;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

@@ -18,8 +18,8 @@
 package com.epimorphics.jsonrdf;
 
 import com.epimorphics.lda.support.EldaFileManager;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.junit.Test;
 
 import java.io.StringReader;

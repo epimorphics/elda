@@ -4,11 +4,11 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.EndpointMetadata;
 import com.epimorphics.lda.metadata.MetaConfig;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

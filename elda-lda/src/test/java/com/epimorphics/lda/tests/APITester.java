@@ -36,10 +36,10 @@ import com.epimorphics.lda.tests_support.FileManagerModelLoader;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ResIterator;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
 
 import java.io.StringWriter;
 import java.net.URI;

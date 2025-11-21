@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.core;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * Interface for classes that accept named metadata.

@@ -8,8 +8,8 @@
 
 package com.epimorphics.lda.vocabularies;
 
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 /**
  * A tiny stub of SKOS properties used explicitly in Elda.

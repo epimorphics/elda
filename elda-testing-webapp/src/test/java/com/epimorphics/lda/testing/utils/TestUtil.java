@@ -22,8 +22,7 @@ package com.epimorphics.lda.testing.utils;
 
 import com.epimorphics.rdfutil.RDFUtil;
 import com.epimorphics.util.PrefixUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.iterator.Map1;
+import org.apache.jena.rdf.model.*;
 
 import java.io.StringReader;
 import java.util.Collection;
@@ -190,12 +189,7 @@ public class TestUtil {
     }
 
     private static Set<RDFNode> getValues(Resource expected, Property p) {
-        return expected.listProperties(p).mapWith(new Map1<Statement, RDFNode>() {
-            @Override
-            public RDFNode map1(Statement s) {
-                return s.getObject();
-            }
-        }).toSet();
+        return expected.listProperties(p).mapWith(Statement::getObject).toSet();
     }
 
     private static Model buildTestModel(Resource r, Property... props) {

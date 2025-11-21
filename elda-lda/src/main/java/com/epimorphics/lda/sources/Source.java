@@ -18,11 +18,11 @@
 package com.epimorphics.lda.sources;
 
 import com.epimorphics.lda.textsearch.TextSearchConfig;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 /**
  * Abstraction of the data endpoint to be queried.

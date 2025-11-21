@@ -15,8 +15,8 @@ import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.support.QuerySupport;
 import com.epimorphics.lda.support.QuerySupport.Reordered;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.RDF;
 import org.junit.Test;
 
 import java.util.Arrays;

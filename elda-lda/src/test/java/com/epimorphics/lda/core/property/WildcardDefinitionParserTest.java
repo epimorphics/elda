@@ -5,7 +5,7 @@ import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.Variable;
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 import org.junit.Test;
 import org.mockito.Mockito;
 

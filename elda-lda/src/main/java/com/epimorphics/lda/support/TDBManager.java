@@ -14,10 +14,10 @@
 
 package com.epimorphics.lda.support;
 
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.tdb.TDBFactory;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.tdb.TDBFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

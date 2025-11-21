@@ -11,7 +11,7 @@ package com.epimorphics.lda.renderers.json;
 import com.epimorphics.lda.shortnames.Transcoding;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.util.EldaNameUtils;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 
 import java.util.HashMap;
 import java.util.HashSet;

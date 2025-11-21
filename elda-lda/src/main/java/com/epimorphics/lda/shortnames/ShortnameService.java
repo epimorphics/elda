@@ -10,10 +10,10 @@ package com.epimorphics.lda.shortnames;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
 
 import java.util.Map;
 

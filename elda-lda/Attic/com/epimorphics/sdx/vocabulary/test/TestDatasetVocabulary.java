@@ -14,8 +14,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.epimorphics.sdx.vocabulary.DSV;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
 
 public class TestDatasetVocabulary {
     @Test

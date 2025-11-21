@@ -12,9 +12,9 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.XSD;
 import org.junit.Test;
 
 import java.util.Map;

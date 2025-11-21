@@ -9,7 +9,7 @@
 package com.epimorphics.lda.exceptions;
 
 import com.epimorphics.lda.sources.Source;
-import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
+import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

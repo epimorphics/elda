@@ -8,7 +8,7 @@
 package com.epimorphics.lda.renderers;
 
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 import java.util.*;
 

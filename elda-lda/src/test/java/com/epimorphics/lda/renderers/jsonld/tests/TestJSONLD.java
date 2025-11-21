@@ -5,7 +5,7 @@ import com.epimorphics.jsonrdf.JSONWriterFacade;
 import com.epimorphics.jsonrdf.JSONWriterWrapper;
 import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.lda.renderers.JSONLDComposer;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -57,7 +57,7 @@ public class TestJSONLD {
         jc.renderItems(Arrays.asList(item));
         String content = s.toString();
         if (!content.contains("{\"@lang\" : \"fr\", \"@value\" : \"chat\"}"))
-            fail("");
+            fail("Expected {\"@lang\" : \"fr\", \"@value\" : \"chat\"} in output but got: " + content);
     }
 
 }

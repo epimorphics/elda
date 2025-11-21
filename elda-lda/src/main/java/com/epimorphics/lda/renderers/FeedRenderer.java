@@ -21,14 +21,14 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.lda.vocabularies.SKOSstub;
 import com.epimorphics.util.*;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.WrappedException;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDFS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -317,7 +317,7 @@ public class FeedRenderer implements Renderer {
 
     private List<RDFNode> getEntryAuthors(Resource r) {
         for (Property p : getAuthorProperties()) {
-            List<RDFNode> candidates = r.listProperties(p).mapWith(Statement.Util.getObject).toList();
+            List<RDFNode> candidates = r.listProperties(p).mapWith(Statement::getObject).toList();
             if (candidates.size() > 0) return candidates;
         }
         return new ArrayList<RDFNode>();

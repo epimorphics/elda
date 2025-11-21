@@ -33,9 +33,9 @@
 
 package com.epimorphics.jsonrdf;
 
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.Test;
 
 import java.text.ParseException;

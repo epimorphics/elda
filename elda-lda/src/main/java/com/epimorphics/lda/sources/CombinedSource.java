@@ -17,21 +17,21 @@ package com.epimorphics.lda.sources;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.QueryUtil;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.shared.LockMRSW;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.iterator.Map1;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.shared.LockMRSW;
+import org.apache.jena.util.FileManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * A combined source is a way of composing data from different endpoints.
@@ -54,29 +54,19 @@ public class CombinedSource extends SourceBase implements Source {
 
     protected final Lock lock = new LockMRSW();
 
-    private static final Map1<Statement, Source> toSource(final FileManager fm, final AuthMap am) {
-        return new Map1<Statement, Source>() {
-            @Override
-            public Source map1(Statement o) {
-                return GetDataSource.sourceFromSpec(fm, o.getResource(), am);
-            }
-        };
+    private static Function<Statement, Source> toSource(final FileManager fm, final AuthMap am) {
+        return o -> GetDataSource.sourceFromSpec(fm, o.getResource(), am);
     }
 
-    private static final Map1<Statement, String> toString = new Map1<Statement, String>() {
-        @Override
-        public String map1(Statement o) {
-            return o.getString();
-        }
-    };
+    private static final Function<Statement, String> toString = Statement::getString;
 
     /**
      * ep is a resource of type Combiner. It has multiple elements, each of
      * which themselves represent sub-sources.
      */
     public CombinedSource(FileManager fm, AuthMap am, Resource ep) {
-        constructs = ep.listProperties(ELDA_API.construct).mapWith(toString).toList();
-        matches = ep.listProperties(ELDA_API.match).mapWith(toString).toList();
+        constructs = ep.listProperties(ELDA_API.construct).mapWith(Statement::getString).toList();
+        matches = ep.listProperties(ELDA_API.match).mapWith(Statement::getString).toList();
         sources = ep.listProperties(ELDA_API.element).mapWith(toSource(fm, am)).toList();
     }
 

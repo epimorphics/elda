@@ -19,12 +19,12 @@ import org.junit.Test;
 
 import com.epimorphics.restful.support.*;
 import com.epimorphics.sdx.vocabulary.DSV;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.WrappedException;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class TestCatalogueModelConstruction {

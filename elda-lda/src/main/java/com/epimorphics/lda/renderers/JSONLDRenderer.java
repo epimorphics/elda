@@ -13,10 +13,10 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.jena.JenaJSONLD;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.shared.WrappedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;

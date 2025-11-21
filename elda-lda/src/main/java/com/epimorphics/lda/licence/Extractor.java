@@ -4,10 +4,10 @@ import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APIEndpointSpec;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 
 import java.util.ArrayList;
 import java.util.HashSet;

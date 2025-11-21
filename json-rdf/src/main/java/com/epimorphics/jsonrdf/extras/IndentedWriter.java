@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import com.hp.hpl.jena.sparql.ARQInternalErrorException;
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.sparql.ARQInternalErrorException;
+import org.apache.jena.util.FileUtils;
 
 /**
  * A writer that records what the current indentation level is, and

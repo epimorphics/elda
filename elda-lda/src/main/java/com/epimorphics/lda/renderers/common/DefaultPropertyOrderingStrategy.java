@@ -14,7 +14,7 @@ import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.PropertyValue;
 import com.epimorphics.rdfutil.PropertyValueSet;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

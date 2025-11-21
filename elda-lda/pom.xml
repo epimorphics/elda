@@ -13,35 +13,7 @@
 
   <url>http://maven.apache.org</url>
 
-  <repositories>
-    <repository>
-      <id>epi-public-s3-snapshot</id>
-      <name>Epimorphics S3 snapshot repository</name>
-      <url>s3://epi-repository/snapshot</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-
-    <repository>
-      <id>epi-public-s3-release</id>
-      <name>Epimorphics S3 release repository</name>
-      <url>s3://epi-repository/release</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <dependencies>
-
-
     <dependency>
       <groupId>com.github.jsonld-java</groupId>
       <artifactId>jsonld-java-jena</artifactId>
@@ -76,8 +48,8 @@
 
     <dependency>
       <groupId>org.apache.jena</groupId>
-      <artifactId>jena-tdb</artifactId>
-      <version>0.10.1</version>
+      <artifactId>jena-tdb1</artifactId>
+      <version>${ver.jena}</version>
       <exclusions>
         <exclusion>
           <groupId>log4j</groupId>
@@ -86,10 +58,11 @@
       </exclusions>
     </dependency>
 
+
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
-      <version>2.11.2</version>
+      <version>${ver.jena}</version>
       <type>test-jar</type>
       <scope>test</scope>
       <exclusions>
@@ -102,8 +75,15 @@
 
     <dependency>
       <groupId>org.apache.jena</groupId>
+      <artifactId>jena-cmds</artifactId>
+      <version>${ver.jena}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.jena</groupId>
       <artifactId>jena-arq</artifactId>
-      <version>2.11.2</version>
+      <version>${ver.jena}</version>
       <type>test-jar</type>
       <scope>test</scope>
       <exclusions>
@@ -145,7 +125,7 @@
     <dependency>
       <groupId>com.epimorphics</groupId>
       <artifactId>lib</artifactId>
-      <version>0.1.6</version>
+      <version>4.0.0-SNAPSHOT</version>
       <exclusions>
         <exclusion>
           <groupId>log4j</groupId>
@@ -180,12 +160,6 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>1.33</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.5.14</version>
     </dependency>
 
     <dependency>
@@ -272,7 +246,6 @@
       </plugin>
 
     </plugins>
-
     <pluginManagement>
       <plugins>
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->

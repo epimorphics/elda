@@ -12,7 +12,7 @@
 package com.epimorphics.util.tests;
 
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

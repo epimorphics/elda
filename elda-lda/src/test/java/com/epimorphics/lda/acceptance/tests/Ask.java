@@ -6,7 +6,7 @@
 */
 package com.epimorphics.lda.acceptance.tests;
 
-import com.hp.hpl.jena.query.Query;
+import org.apache.jena.query.Query;
 
 /**
  * An ASK query, with the expected result: true (Positive) or

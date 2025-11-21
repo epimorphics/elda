@@ -7,9 +7,9 @@
 package com.epimorphics.vocabs;
 
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.impl.Util;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.util.SplitIRI;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 public class NsUtils {
 
@@ -25,12 +25,10 @@ public class NsUtils {
     }
 
     public static String getNameSpace(String uri) {
-        int split = Util.splitNamespace(uri);
-        return uri.substring(0, split);
+        return SplitIRI.namespace(uri);
     }
 
     public static String getLocalName(String uri) {
-        int split = Util.splitNamespace(uri);
-        return uri.substring(split);
+        return SplitIRI.localname(uri);
     }
 }

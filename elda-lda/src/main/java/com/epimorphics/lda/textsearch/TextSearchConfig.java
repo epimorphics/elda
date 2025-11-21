@@ -13,8 +13,8 @@ import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.AnyList;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDFS;
 
 import java.util.List;
 

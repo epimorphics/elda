@@ -11,13 +11,13 @@ package com.epimorphics.lda.shortnames;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.EldaNameUtils;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.impl.Util;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.util.SplitIRI;
 
 import java.util.*;
-
-import static com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace;
 
 public class CompleteContext {
 
@@ -65,7 +65,7 @@ public class CompleteContext {
         }
 
         static SplitURI create(String uri) {
-            int cut = splitNamespace(uri);
+            int cut = SplitIRI.splitpoint(uri);
             String ns = uri.substring(0, cut);
             String ln = uri.substring(cut);
             return new SplitURI(uri, ns, ln);
@@ -159,7 +159,10 @@ public class CompleteContext {
 
         for (SplitURI mt : modelTerms) {
             String ln = mt.ln;
-            if (EldaNameUtils.isLegalShortname(ln) && !uriToShortname.containsValue(ln)) {
+            if (!EldaNameUtils.isLegalShortname(ln)) {
+                ln = EldaNameUtils.escapeLocalName(ln);
+            }
+            if (!uriToShortname.containsValue(ln)) {
                 List<SplitURI> terms = localNameToURIs.get(ln);
                 if (terms == null) localNameToURIs.put(ln, terms = new ArrayList<SplitURI>());
                 terms.add(mt);

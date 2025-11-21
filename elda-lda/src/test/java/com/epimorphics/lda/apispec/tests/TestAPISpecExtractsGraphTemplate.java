@@ -11,8 +11,8 @@ package com.epimorphics.lda.apispec.tests;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

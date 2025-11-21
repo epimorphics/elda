@@ -19,9 +19,9 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.shared.PrefixMapping;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

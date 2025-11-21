@@ -17,11 +17,11 @@ import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.tests.SNS;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.OWL;
 import org.junit.Test;
 
 import java.util.List;

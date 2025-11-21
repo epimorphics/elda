@@ -17,7 +17,7 @@
 
 package com.epimorphics.jsonrdf;
 
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDF;
 import org.junit.Test;
 
 import java.io.IOException;

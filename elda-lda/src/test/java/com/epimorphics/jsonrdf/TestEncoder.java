@@ -38,11 +38,11 @@ import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonException;
 import org.apache.jena.atlas.json.JsonObject;
@@ -379,7 +379,7 @@ public class TestEncoder {
                 encoderForStructuredLiterals(context), context,
                 ":r :p 'english'@en.",
                 new String[]{":r"},
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_lang': 'en'}}]");
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_datatype': 'rdf_langString', '_lang': 'en'}}]");
     }
 
     @Test

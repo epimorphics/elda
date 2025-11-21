@@ -10,8 +10,8 @@ package com.epimorphics.lda.support.tests;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.support.LanguageFilter;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 import org.junit.Test;
 
 public class TestFilterByLanguages {

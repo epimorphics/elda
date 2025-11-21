@@ -10,7 +10,7 @@ package com.epimorphics.jsonrdf;
 
 import java.util.Set;
 
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 /**
  * The operations of a Context [which implements this] which are needed

@@ -7,9 +7,9 @@
 */
 package com.epimorphics.lda.vocabularies;
 
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 /**
  * A stub for the necessary SPARQL vocabulary.

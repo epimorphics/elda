@@ -15,9 +15,9 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.rdfutil.DatasetWrapper;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

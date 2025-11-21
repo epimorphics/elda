@@ -8,10 +8,10 @@
 
 package com.epimorphics.jsonrdf;
 
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Sub interface used to describe a mapped property
