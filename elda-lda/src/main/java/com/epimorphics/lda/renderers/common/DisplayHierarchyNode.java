@@ -17,8 +17,7 @@ import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.epimorphics.rdfutil.RDFUtil;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jena.atlas.lib.StrUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -303,7 +302,7 @@ public class DisplayHierarchyNode {
         String param = pathTo().toString();
         String paramHTML = pathTo.toHTMLString();
         String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode.getName();
-        String valueLabel = "<code class='rdf-value'>" + StringEscapeUtils.escapeHtml(truncateToMaxLength(valueStr)) + "</code>";
+        String valueLabel = "<code class='rdf-value'>" + StringEscapeUtils.escapeHtml4(truncateToMaxLength(valueStr)) + "</code>";
 
         if (isNumeric) {
             links.add(generateLink("max-" + param, paramHTML, valueStr, valueLabel, "&le;", "filter-less-than", true, page));

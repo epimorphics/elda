@@ -2,7 +2,7 @@ package com.epimorphics.lda.testing.rendering.json;
 
 import com.epimorphics.lda.systemtest.Util;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonArray;

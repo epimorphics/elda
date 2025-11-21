@@ -29,8 +29,8 @@
 
     <dependency>
       <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>1.7</version>
+      <artifactId>velocity-engine-core</artifactId>
+      <version>${ver.velocity}</version>
       <scope>compile</scope>
     </dependency>
 

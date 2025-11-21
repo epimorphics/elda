@@ -8,10 +8,11 @@
 package com.epimorphics.lda.support.pageComposition;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import org.apache.commons.lang.StringEscapeUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 /**
  * Support provides support for servlets/restlets that does not
@@ -59,7 +60,7 @@ public class Messages {
     }
 
     public static String protect(String message) {
-        return StringEscapeUtils.escapeHtml(message);
+        return escapeHtml4(message);
     }
 
     public static String niceMessage(String message) {

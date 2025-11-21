@@ -25,14 +25,14 @@ import com.epimorphics.rdfutil.RDFUtil;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.DCTerms;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.StringWriter;
 import java.util.*;
 
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 /**
  * Value object representing the page of results returned by Elda's query
@@ -523,7 +523,7 @@ public class Page extends CommonNodeWrapper {
             RDFNodeWrapper n = new CommonNodeWrapper(getModelW(), RDFUtil.asRDFNode(filterValue));
 
             if (shortNameRenderer().isKnownShortnamePath(filterPath)) {
-                links.add(createRemovalLink(eu, p.name(), p.name(), filterValue, escapeHtml(n.getName())));
+                links.add(createRemovalLink(eu, p.name(), p.name(), filterValue, StringEscapeUtils.escapeHtml4(n.getName())));
             }
         }
 

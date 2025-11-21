@@ -57,7 +57,7 @@ public class Extractor {
             queryLines.add("  }");
             //
             queryLines.add("}");
-            return org.apache.commons.lang.StringUtils.join(queryLines, "\n");
+            return org.apache.commons.lang3.StringUtils.join(queryLines, "\n");
         }
         return null;
     }
