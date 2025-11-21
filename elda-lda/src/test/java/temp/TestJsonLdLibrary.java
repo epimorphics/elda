@@ -1,6 +1,5 @@
 package temp;
 
-import com.github.jsonldjava.jena.JenaJSONLD;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.Ignore;
@@ -10,10 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
 public class TestJsonLdLibrary {
-
-    static {
-        JenaJSONLD.init();
-    }
 
     @Test
     @Ignore
