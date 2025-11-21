@@ -24,7 +24,6 @@
     <ver.jena>5.6.0</ver.jena>
     <ver.junit>4.13.2</ver.junit>
     <ver.log4j>2.17.1</ver.log4j>
-    <ver.lucene>7.1.0</ver.lucene>
     <ver.jersey>4.0.0</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>2.0.17</ver.slf4j>
@@ -123,12 +122,6 @@
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
       <version>3.2.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-      <version>${ver.lucene}</version>
     </dependency>
 
     <dependency>
