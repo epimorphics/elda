@@ -13,8 +13,7 @@ package com.epimorphics.lda.renderers.common;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.commons.lang.StringUtils;
-import org.apache.jena.atlas.lib.StrUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

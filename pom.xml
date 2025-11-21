@@ -28,7 +28,7 @@
     <ver.jersey>4.0.0</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>2.0.17</ver.slf4j>
-    <ver.velocity>1.7</ver.velocity>
+    <ver.velocity>2.4.1</ver.velocity>
     <ver.wagon>2.2</ver.wagon>
     <ver.xmlunit>1.4</ver.xmlunit>
     <jdk.version>21</jdk.version>
@@ -117,12 +117,6 @@
 
 
   <dependencies>
-
-    <dependency>
-      <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>${ver.velocity}</version>
-    </dependency>
 
     <dependency>
       <!-- Override 3.2.1 introduced by org.apache.velocity:velocity@1.7 -->

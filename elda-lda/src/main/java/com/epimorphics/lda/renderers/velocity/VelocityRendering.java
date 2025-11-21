@@ -23,11 +23,11 @@ import com.epimorphics.lda.support.Glob;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.jena.shared.BrokenException;
 import org.apache.jena.shared.WrappedException;
 import org.apache.jena.shared.WrappedIOException;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -412,7 +412,7 @@ public class VelocityRendering
      * Add generic tools to the Velocity context
      */
     protected void addTools(VelocityContext vc) {
-        vc.put("esc", new StringEscapeUtils());
+        vc.put("esc", StringEscapeUtils.class);
         vc.put("log", log);
     }
 
