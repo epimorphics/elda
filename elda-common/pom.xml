@@ -32,6 +32,12 @@
       <artifactId>velocity-engine-core</artifactId>
       <version>${ver.velocity}</version>
       <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
