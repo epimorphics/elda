@@ -1,0 +1,12 @@
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{STRICT, UTC} %-5level [%t] (%logger{36}) - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <logger name="org.apache.http" level="info" />
+  <logger name="org.apache.jena" level="info" />
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

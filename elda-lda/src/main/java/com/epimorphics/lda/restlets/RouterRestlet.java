@@ -17,6 +17,9 @@
 
 package com.epimorphics.lda.restlets;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
 import com.epimorphics.lda.Version;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.URLforResource;
@@ -41,6 +44,7 @@ import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.*;
 import com.epimorphics.util.MediaType;
+import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.shared.WrappedException;
 import jakarta.servlet.ServletContext;
@@ -140,16 +144,16 @@ public class RouterRestlet {
         @Override
         public void contextInitialized(ServletContextEvent sce) {
             ServletContext sc = sce.getServletContext();
-            if (announced == false) {
+            if (!announced) {
                 String baseFilePath = ServletUtils.withTrailingSlash(sc.getRealPath("/"));
-                // TODO - replace with logback configuration setup
-//                String propertiesFile = System.getenv("ELDA_LOG4J_PROPERTIES");
-//                if (propertiesFile == null) propertiesFile = "log4j.properties";
-//
-//                LoggerContext context = LogManager.getContext(false);
-//                File file = new File(baseFilePath + propertiesFile);
-//                context.setConfigLocation(file.toURI());
-
+                String propertiesFileName = System.getenv("ELDA_LOGBACK_PROPERTIES");
+                if (propertiesFileName == null) {
+                    propertiesFileName = "logback.xml";
+                }
+                File propertiesFile = new File(baseFilePath + propertiesFileName);
+                if (propertiesFile.exists()) {
+                    configureLogging(propertiesFile);
+                }
                 log.info("\n\n    =>=> Starting Elda (Init) {}\n", Version.string);
                 announced = true;
             }
@@ -159,6 +163,21 @@ public class RouterRestlet {
         @Override
         public void contextDestroyed(ServletContextEvent sce) {
         }
+
+        private void configureLogging(File propertiesFile) {
+            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+            loggerContext.reset();
+            JoranConfigurator configurator = new JoranConfigurator();
+            try (InputStream configStream = FileUtils.openInputStream(propertiesFile)) {
+                configurator.setContext(loggerContext);
+                configurator.doConfigure(configStream); // loads logback file
+            } catch (IOException ex) {
+                log.warn("Failed to load properties file: " + propertiesFile.getAbsolutePath(), ex);
+            } catch (JoranException ex) {
+                log.warn("Failed to configure logback with file: " + propertiesFile.getAbsolutePath(), ex);
+            }
+        }
+
     }
 
     public static int loadCounter = 0;
@@ -237,8 +256,7 @@ public class RouterRestlet {
     }
 
     public Match getMatch(String path, MultiMap<String, String> queryParams) {
-        Match match = router.getMatch(path, queryParams);
-        return match;
+        return router.getMatch(path, queryParams);
     }
 
     @GET
@@ -470,10 +488,6 @@ public class RouterRestlet {
 
             long expiresAt = nb.expiresAt;
 
-//        	System.err.println( ">> expiresAt: " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
-//        	System.err.println( ">> expiresAt: (= " + expiresAt + ")" );
-//        	System.err.println( ">>  " + (expiresAt < System.currentTimeMillis() ? " expired" : " still alive" ) + ".");
-
             String expiresDate = expiresAt < System.currentTimeMillis()
                     ? NO_EXPIRY
                     : RouterRestletSupport.expiresAtAsRFC1123(expiresAt);
@@ -567,9 +581,9 @@ public class RouterRestlet {
         return URIUtils.resolveAgainstBase(requestUri, baseUri, ui.getPath());
     }
 
-    private static String MATCHES_SCHEME = "[a-zA-Z][-.+A-Za-z0-9]+:";
+    private static final String MATCHES_SCHEME = "[a-zA-Z][-.+A-Za-z0-9]+:";
 
-    private static String STARTS_WITH_SCHEME = "^" + MATCHES_SCHEME + ".*";
+    private static final String STARTS_WITH_SCHEME = "^" + MATCHES_SCHEME + ".*";
 
     private static URLforResource pathAsURLFactory(final ServletContext servCon) {
         return new URLforResource() {
@@ -579,7 +593,7 @@ public class RouterRestlet {
                     if (ePath == null)
                         throw new RuntimeException("problem: resource path in asResourceURL is null.");
 
-                    URL url = ePath.matches(STARTS_WITH_SCHEME) ? new URL(ePath)
+                    URL url = ePath.matches(STARTS_WITH_SCHEME) ? URI.create(ePath).toURL()
                             : ePath.startsWith("/") ? pathToURL(ePath)
                             : pathToURL(getRealPath(servCon, "/" + ePath));
 
