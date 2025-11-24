@@ -8,3 +8,4 @@
 * Updated Velocity to version 2.4.1. This may require updates to custom templates. See the Velocity 2.x migration guide (https://velocity.apache.org/engine/2.4/upgrading.html#upgrading-from-velocity-1x-to-the-latest-2x-version-for-busy-people) for details.
 * Removed unused dependency on jsonld-java library.
 * Removed unused dependency on Lucene library.
+* Switched logging library from Log4J to SLF4J with Logback backend. This will require updates to any custom logging configurations.
