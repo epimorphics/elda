@@ -10,10 +10,9 @@
   <description>Top level linked data API project</description>
 
   <scm>
-    <connection>scm:git:${tempSCM}</connection>
-    <developerConnection>scm:git:${tempSCM}</developerConnection>
-    <url>scm:git:${tempSCM}</url>
-    <tag>HEAD</tag>
+      <developerConnection>scm:git:git@github.com:epimorphics/elda.git</developerConnection>
+      <url>https://github.com/epimorphics/elda</url>
+      <tag>HEAD</tag>
   </scm>
 
   <properties>
