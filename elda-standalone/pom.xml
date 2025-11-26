@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>elda</artifactId>
@@ -12,53 +13,51 @@
   <description>instant Elda webapp</description>
 
   <dependencies>
-
-	<dependency>
+    <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
       <version>${tomcat.version}</version>
       <scope>provided</scope>
     </dependency>
 
-	<dependency>
-    <groupId>org.apache.tomcat.embed</groupId>
-    <artifactId>tomcat-embed-logging-log4j</artifactId>
-    <version>${tomcat.version}</version>
-    <scope>provided</scope>
-  </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-logging-log4j</artifactId>
+      <version>${tomcat.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
-	<dependency>
+    <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
       <version>${tomcat.version}</version>
       <scope>provided</scope>
     </dependency>
 
-	<dependency>
+    <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>elda-assets</artifactId>
       <version>${project.version}</version>
       <type>war</type>
-  </dependency>
+    </dependency>
 
-	<dependency>
+    <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>elda-lda</artifactId>
       <version>${project.version}</version>
     </dependency>
 
-	<dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13.2</version>
-	</dependency>
+    </dependency>
 
   </dependencies>
 
   <build>
     <finalName>elda-standalone</finalName>
-	<plugins>
-
+    <plugins>
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
@@ -66,16 +65,18 @@
         <executions>
           <execution>
             <id>tomcat-run</id>
-            <goals> <goal>exec-war</goal> </goals>
+            <goals>
+              <goal>exec-war</goal>
+            </goals>
             <phase>package</phase>
-			<configuration>
-				<path>/standalone</path>
-			</configuration>
+            <configuration>
+              <path>/standalone</path>
+            </configuration>
           </execution>
         </executions>
       </plugin>
 
-	  <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>2.6</version>
@@ -83,7 +84,6 @@
           <skip>false</skip>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
