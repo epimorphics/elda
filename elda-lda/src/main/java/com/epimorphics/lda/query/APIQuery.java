@@ -67,16 +67,16 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 */
 	protected List<RDFQ.Triple> basicGraphTriples = new ArrayList<RDFQ.Triple>();
 
-	protected List<List<RDFQ.Triple>> optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>();
+    protected RDFQ.Tree optionalGraphTree = new RDFQ.Tree(SELECT_VAR);
 
 	public List<RDFQ.Triple> getBasicGraphTriples() {
 		// FOR TESTING ONLY
 		return basicGraphTriples;
 	}
 
-	public List<List<RDFQ.Triple>> getOptionalGraphTriples() {
+	public RDFQ.Tree getOptionalGraphTree() {
 		// FOR TESTING ONLY
-		return optionalGraphTriples;
+		return optionalGraphTree;
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.graphTemplate = other.graphTemplate;
 		this.languagesFor = new HashMap<String, String>(other.languagesFor);
 		this.basicGraphTriples = new ArrayList<RDFQ.Triple>(other.basicGraphTriples);
-		this.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(other.optionalGraphTriples);
+        this.optionalGraphTree = other.optionalGraphTree.copy();
 		this.filterExpressions = new ArrayList<RenderExpression>(other.filterExpressions);
 		this.orderExpressions = new StringBuffer(other.orderExpressions);
 		this.whereExpressions = new StringBuffer(other.whereExpressions);
@@ -598,29 +598,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return vt.objectForValue(inf, val, languages);
 	}
 
-	/**
-	 * Generate triples to bind <code>var</code> to the value of the
-	 * <code>param</code> property chain if it exists (ie all of the triples are
-	 * OPTIONAL).
-	 */
-	protected void optionalProperty(Variable startFrom, Param param, Variable var) {
-		Param.Info[] infos = param.fullParts();
-		Variable s = startFrom;
-		int remaining = infos.length;
-		List<RDFQ.Triple> chain = new ArrayList<RDFQ.Triple>(infos.length);
-		//
-		for (Param.Info inf : infos) {
-			remaining -= 1;
-			Variable o = remaining == 0 ? var : newVar();
-			onePropertyStep(chain, s, inf, o);
-			s = o;
-		}
-		optionalGraphTriples.add(chain);
-	}
-
 	protected void addPropertyHasntValue(Param param) {
-		Variable var = newVar();
-		optionalProperty(SELECT_VAR, param, var);
+        Variable var = addToGraphTree(param, optionalGraphTree);
 		filterExpressions.add(RDFQ.apply("!", RDFQ.apply("bound", var)));
 	}
 
@@ -676,7 +655,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 					boolean descending = spec.startsWith("-");
 					if (descending)
 						spec = spec.substring(1);
-					Variable v = generateSortVariable(spec, mightBeUnbound);
+                    Param p = Param.make(sns, spec);
+                    Variable v = addToGraphTree(p, optionalGraphTree);
 					if (descending) {
 						orderExpressions.append(" DESC(" + v.name() + ") ");
 					} else {
@@ -689,27 +669,23 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		sortByOrderSpecsFrozen = true;
 	}
 
-	private Variable generateSortVariable(String spec, Bool mightBeUnbound) {
-		return generateSortVariable(SELECT_VAR, spec + ".", 0, mightBeUnbound);
-	}
+    private Variable addToGraphTree(Param p, RDFQ.Tree sortTree) {
+        Param.Info[] parts = p.fullParts();
+        Map<String, RDFQ.Tree> nested;
+        String name;
+        for (Param.Info part : parts) {
+            nested = sortTree.nested;
+            name = part.asResource.getURI();
+            if (nested.containsKey(name)) {
+                sortTree = nested.get(name);
+            } else {
+                sortTree = new RDFQ.Tree(newVar());
+                nested.put(name, sortTree);
+            }
+        }
 
-	private Variable generateSortVariable(Variable anchor, String spec, int where, Bool mightBeUnbound) {
-		if (where == spec.length())
-			return anchor;
-		//
-		int dot = spec.indexOf('.', where);
-		String thing = spec.substring(0, dot);
-		Variable v = varsForPropertyChains.get(thing);
-		if (v == null) {
-			v = newVar();
-			varsForPropertyChains.put(thing, v);
-			optionalProperty(anchor, Param.make(sns, spec.substring(where)), v);
-			mightBeUnbound.value = true;
-			return v;
-		} else {
-			return generateSortVariable(v, spec, dot + 1, mightBeUnbound);
-		}
-	}
+        return sortTree.root;
+    }
 
 	@Override public Variable newVar() {
 		return RDFQ.var(PREFIX_VAR + varcount++);
@@ -836,16 +812,26 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		
 		for (RDFQ.Triple t : r.plainTriples)
 			sb.append(t.asSparqlTriple(pl)).append(" .\n");
-		
-		for (List<RDFQ.Triple> optional : optionalGraphTriples) {
-			sb.append("OPTIONAL { ");
-			for (RDFQ.Triple t : optional) {
-				sb.append(t.asSparqlTriple(pl)).append(" . ");
-			}
-			sb.append("}\n");
-		}
-		return sb.toString();
+
+        buildOptionalFromTree(sb, pl, optionalGraphTree);
+        sb.append("\n");
+
+        return sb.toString();
 	}
+
+    private void buildOptionalFromTree(StringBuilder sb, PrefixLogger pl, RDFQ.Tree tree) {
+        for (Map.Entry<String, RDFQ.Tree> entry : tree.nested.entrySet()) {
+            sb.append("OPTIONAL { ");
+            Variable subject = tree.root;
+            URINode propUri = RDFQ.uri(ResourceFactory.createResource(entry.getKey()));
+            RDFQ.Tree nested = entry.getValue();
+            Variable object = nested.root;
+            RDFQ.Triple t = new RDFQ.Triple(subject, propUri, object);
+            sb.append(t.asSparqlTriple(pl)).append(" . ");
+            buildOptionalFromTree(sb, pl, nested);
+            sb.append(" } ");
+        }
+    }
 
 	/**
 	 * Take the SPARQL query string <code>query</code> and replace any ?SPOO

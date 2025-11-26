@@ -14,6 +14,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.XSD;
 
+import java.util.HashMap;
+
 
 /**
     A skinny set of classes for representing SPARQL atomic terms,
@@ -24,6 +26,29 @@ import com.hp.hpl.jena.vocabulary.XSD;
 public class RDFQ
 	{
 	public static final URINode RDF_TYPE = uri( RDF.type );
+
+    /**
+     * Representation of a graph pattern with arbitrary nesting depth.
+     * Each node in the graph is bound to a variable ([root]).
+     */
+    public static class Tree {
+        public final Variable root;
+        public final HashMap<String, Tree> nested;
+
+        public Tree(Variable root) {
+            this.root = root;
+            this.nested = new HashMap<>();
+        }
+
+        public Tree copy() {
+            Tree copy = new RDFQ.Tree(root);
+            HashMap<String, Tree> nested = copy.nested;
+            for (HashMap.Entry<String, Tree> entry : this.nested.entrySet()) {
+                nested.put(entry.getKey(), entry.getValue().copy());
+            }
+            return copy;
+        }
+    }
 	
 	public static class Triple 
 		{

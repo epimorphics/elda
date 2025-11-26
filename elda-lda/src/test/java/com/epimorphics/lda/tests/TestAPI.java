@@ -179,11 +179,20 @@ public class TestAPI {
 	@Test public void testQueryTemplates() {
 		testAPI("http://dummy/doc/schools", "_properties=name,size,rdf_type", "testTemplateNameSizeType.ttl");
 		testAPI("http://dummy/doc/schools", "_properties=name,size", "testTemplateNameSize.ttl");
+
 	}
 
 	@Test public void testOrderInQuery() {
 		testAPI("http://dummy/doc/schools/london", "_sort=size", "testSpecLondonSize.ttl");
 		testAPI("http://dummy/doc/schools/london", "_sort=-size", "testSpecLondonSizeDown.ttl");
+        testAPI("http://dummy/doc/schools", "_pageSize=25&_sort=localAuthority.rdfs_label,localAuthority.rdf_type,name", "testSortTree.ttl");
+        testAPI("http://dummy/doc/schools", "_pageSize=25&min-localAuthority.rdfs_label=A&_sort=localAuthority.rdfs_label,localAuthority.rdf_type,name", "testSortTreeWithFilter.ttl");
+    }
+
+    @Test
+    public void testFilterNotExists() {
+        testAPI("http://dummy/doc/schools", "exists-ex_type=false&_sort=name", "testSpecFilterNotEx.ttl");
+        testAPI("http://dummy/doc/schools", "exists-ex_type=false&_sort=ex_type,name", "testSpecFilterNotEx.ttl");
 	}
 
 	@Test public void testPrefixedReferences() {
