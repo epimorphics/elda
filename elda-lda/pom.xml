@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>elda</artifactId>
@@ -39,8 +40,6 @@
   </repositories>
 
   <dependencies>
-
-
     <dependency>
       <groupId>com.github.jsonld-java</groupId>
       <artifactId>jsonld-java-jena</artifactId>
@@ -59,7 +58,7 @@
           <artifactId>jackson-databind</artifactId>
         </exclusion>
       </exclusions>
-     </dependency>
+    </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -67,22 +66,22 @@
       <version>2.20.0</version>
     </dependency>
 
-      <dependency>
-          <groupId>org.apache.velocity</groupId>
-          <artifactId>velocity</artifactId>
-          <version>1.7</version>
-      </dependency>
+    <dependency>
+      <groupId>org.apache.velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.7</version>
+    </dependency>
 
     <dependency>
-        <groupId>org.apache.jena</groupId>
-        <artifactId>jena-tdb</artifactId>
-        <version>0.10.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-          </exclusion>
-        </exclusions>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-tdb</artifactId>
+      <version>0.10.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -97,7 +96,7 @@
           <artifactId>log4j</artifactId>
         </exclusion>
       </exclusions>
-  </dependency>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.jena</groupId>
@@ -111,9 +110,9 @@
           <artifactId>log4j</artifactId>
         </exclusion>
       </exclusions>
-  </dependency>
+    </dependency>
 
-  <dependency>
+    <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-core</artifactId>
       <version>${ver.jersey}</version>
@@ -177,7 +176,7 @@
       <groupId>org.jmock</groupId>
       <artifactId>jmock-legacy</artifactId>
       <version>2.6.0</version>
-        <scope>test</scope>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -224,113 +223,115 @@
   </dependencies>
 
   <build>
-      <plugins>
-          <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>2.5</version>
-            <executions>
-              <execution>
-                <id>copy-version</id>
-                <!-- here the phase you need -->
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${basedir}/src/main/java/com/epimorphics/lda</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>src/pre</directory>
-                      <includes>
-                          <include>Version.java</include>
-                      </includes>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>copy-version</id>
+            <!-- here the phase you need -->
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/java/com/epimorphics/lda</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/pre</directory>
+                  <includes>
+                    <include>Version.java</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-    <plugin>
+      <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.7</version>
         <executions>
-            <execution>
-                <phase>generate-sources</phase>
-                <configuration>
-                    <target>
-                        <property name="classpath" refid="maven.compile.classpath" />
-                        <ant />
-                    </target>
-                </configuration>
-                <goals> <goal>run</goal> </goals>
-            </execution>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target>
+                <property name="classpath" refid="maven.compile.classpath"/>
+                <ant/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
         </executions>
-    </plugin>
+      </plugin>
 
-          <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-jar-plugin</artifactId>
-               <version>2.2</version>
-               <executions>
-                 <execution>
-                   <goals>
-                     <goal>test-jar</goal>
-                   </goals>
-                 </execution>
-               </executions>
-         </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-<!--          <plugin>-->
-<!--          <artifactId>maven-source-plugin</artifactId>-->
-<!--          <version>2.1.1</version>-->
-<!--          <executions>-->
-<!--            <execution>-->
-<!--                <id>bundle-sources</id>-->
-<!--                <phase>package</phase>-->
-<!--                <goals>-->
-<!--                  &lt;!&ndash; produce source artifact for main project sources &ndash;&gt;-->
-<!--                    <goal>jar-no-fork</goal>-->
-<!--                </goals>-->
-<!--            </execution>-->
-<!--          </executions>-->
-<!--        </plugin>-->
+      <!--          <plugin>-->
+      <!--          <artifactId>maven-source-plugin</artifactId>-->
+      <!--          <version>2.1.1</version>-->
+      <!--          <executions>-->
+      <!--            <execution>-->
+      <!--                <id>bundle-sources</id>-->
+      <!--                <phase>package</phase>-->
+      <!--                <goals>-->
+      <!--                  &lt;!&ndash; produce source artifact for main project sources &ndash;&gt;-->
+      <!--                    <goal>jar-no-fork</goal>-->
+      <!--                </goals>-->
+      <!--            </execution>-->
+      <!--          </executions>-->
+      <!--        </plugin>-->
 
-      </plugins>
+    </plugins>
 
     <pluginManagement>
-    	<plugins>
-    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-    		<plugin>
-    			<groupId>org.eclipse.m2e</groupId>
-    			<artifactId>lifecycle-mapping</artifactId>
-    			<version>1.0.0</version>
-    			<configuration>
-    				<lifecycleMappingMetadata>
-    					<pluginExecutions>
-    						<pluginExecution>
-    							<pluginExecutionFilter>
-    								<groupId>
-    									org.apache.maven.plugins
-    								</groupId>
-    								<artifactId>
-    									maven-antrun-plugin
-    								</artifactId>
-    								<versionRange>[1.7,)</versionRange>
-    								<goals>
-    									<goal>run</goal>
-    								</goals>
-    							</pluginExecutionFilter>
-    							<action>
-    								<ignore />
-    							</action>
-    						</pluginExecution>
-    					</pluginExecutions>
-    				</lifecycleMappingMetadata>
-    			</configuration>
-    		</plugin>
-    	</plugins>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.apache.maven.plugins
+                    </groupId>
+                    <artifactId>
+                      maven-antrun-plugin
+                    </artifactId>
+                    <versionRange>[1.7,)</versionRange>
+                    <goals>
+                      <goal>run</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
     </pluginManagement>
   </build>
 </project>

@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  	<groupId>com.epimorphics.lda</groupId>
-  	<artifactId>json-rdf</artifactId>
-	<name>json-rdf</name>
-	<version>1.3.1</version>
+  <groupId>com.epimorphics.lda</groupId>
+  <artifactId>json-rdf</artifactId>
+  <name>json-rdf</name>
+  <version>1.3.1</version>
 
-    <properties>
-        <jdk.version>1.7</jdk.version>
-        <ver.junit>4.13.2</ver.junit>
-        <ver.wagon>2.2</ver.wagon>
-    </properties>
-    
-	<repositories>
- 
+  <properties>
+    <jdk.version>1.7</jdk.version>
+    <ver.junit>4.13.2</ver.junit>
+    <ver.wagon>2.2</ver.wagon>
+  </properties>
+
+  <repositories>
     <repository>
       <releases>
         <enabled>true</enabled>
@@ -26,11 +26,9 @@
       <name>Epimorphics Public Repository</name>
       <url>http://repository.epimorphics.com</url>
     </repository>
-
-	</repositories>
+  </repositories>
 
   <dependencies>
-  
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -40,12 +38,11 @@
     </dependency>
 
     <dependency>
-    	<groupId>org.apache.jena</groupId>
-    	<artifactId>jena-arq</artifactId>
-    	<version>2.13.0</version>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-arq</artifactId>
+      <version>2.13.0</version>
     </dependency>
-
-</dependencies>
+  </dependencies>
 
   <distributionManagement>
     <repository>
@@ -55,12 +52,7 @@
     </repository>
   </distributionManagement>
 
-<!--
-  <version>1.2.18-SNAPSHOT</version>
--->
-
   <build>
-
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -73,76 +65,74 @@
         <artifactId>org.springframework.build.aws.maven</artifactId>
         <version>3.0.0.RELEASE</version>
       </extension>
-  </extensions>
+    </extensions>
 
-     <plugins>
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-jar-plugin</artifactId>
-         <version>2.3.2</version>
-         <executions>
-           <execution>
-             <goals>
-               <goal>test-jar</goal>
-             </goals>
-           </execution>
-         </executions>
-     </plugin>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-     <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>2.6</version>
         <configuration>
           <skip>false</skip>
         </configuration>
-    </plugin>
+      </plugin>
 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
 
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <source>${jdk.version}</source>
-            <target>${jdk.version}</target>
-            <encoding>UTF-8</encoding>
-          </configuration>
-        </plugin>
-        
-        <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.7</version><!--$NO-MVN-MAN-VER$-->
-            <executions>
-                <execution>
-                    <phase>generate-sources</phase>
-                    <configuration>
-                        <target>
-                            <property name="classpath" refid="maven.compile.classpath" />
-                            <ant />
-                        </target>
-                    </configuration>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-      
-          <plugin>
-		      <artifactId>maven-source-plugin</artifactId>
-		      <version>2.1.1</version>
-		      <executions>
-			      <execution>
-			          <id>bundle-sources</id>
-			          <phase>package</phase>
-			          <goals>
-			            <!-- produce source artifact for main project sources -->
-			              <goal>jar-no-fork</goal>
-			          </goals>
-			      </execution>
-		      </executions>
-	      </plugin>
-	      
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version><!--$NO-MVN-MAN-VER$-->
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target>
+                <property name="classpath" refid="maven.compile.classpath"/>
+                <ant/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.1</version>
+        <executions>
+          <execution>
+            <id>bundle-sources</id>
+            <phase>package</phase>
+            <goals>
+              <!-- produce source artifact for main project sources -->
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
