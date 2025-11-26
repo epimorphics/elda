@@ -1,0 +1,58 @@
+@prefix ex:    <http://www.epimorphics.com/examples/eg1#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix school-ont: <http://education.data.gov.uk/def/school/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix api:   <http://purl.org/linked-data/api/vocab#> .
+@prefix spec:  <http://www.epimorphics.com/examples/spec1#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+ex:school_41  a  school-ont:School ;
+        ex:name  "Name41" .
+
+ex:school_46  a  school-ont:School ;
+        ex:name  "Name46" .
+
+ex:school_1  a   school-ont:School ;
+        ex:name  "Name1" .
+
+ex:school_44  a  school-ont:School ;
+        ex:name  "Name44" .
+
+ex:school_4  a   school-ont:School ;
+        ex:name  "Name4" .
+
+ex:school_42  a  school-ont:School ;
+        ex:name  "Name42" .
+
+ex:school_2  a   school-ont:School ;
+        ex:name  "Name2" .
+
+ex:school_45  a  school-ont:School ;
+        ex:name  "Name45" .
+
+ex:school_43  a  school-ont:School ;
+        ex:name  "Name43" .
+
+ex:school_3  a   school-ont:School ;
+        ex:name  "Name3" .
+
+<http://dummy/doc/schools>
+        a                            api:Page , api:ListEndpoint ;
+        <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>
+                "10"^^xsd:long ;
+        <http://a9.com/-/spec/opensearch/1.1/startIndex>
+                "1"^^xsd:long ;
+        <http://purl.org/dc/terms/hasPart>
+                <http://dummy/doc/schools> ;
+        <http://purl.org/dc/terms/isPartOf>
+                <http://dummy/doc/schools> ;
+        api:definition               <http://dummy/doc/schools/meta> ;
+        api:extendedMetadataVersion  <http://dummy/doc/schools?_metadata=all> ;
+        api:items                    ( ex:school_1 ex:school_2 ex:school_3 ex:school_4 ex:school_41 ex:school_42 ex:school_43 ex:school_44 ex:school_45 ex:school_46 ) ;
+        api:page                     "0"^^xsd:long ;
+        <http://www.w3.org/1999/xhtml/vocab#first>
+                <http://dummy/doc/schools?_page=0> ;
+        <http://www.w3.org/1999/xhtml/vocab#next>
+                <http://dummy/doc/schools?_page=1> .

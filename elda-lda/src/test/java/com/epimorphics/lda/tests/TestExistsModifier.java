@@ -65,20 +65,20 @@ public class TestExistsModifier
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.oneNamedView, sns, q );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "false" );		
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
-		List<List<RDFQ.Triple>> optionals = q.getOptionalGraphTriples();
+            RDFQ.Tree optionals = q.getOptionalGraphTree();
 		List<RenderExpression> filters = q.getFilterExpressions();
 	//
 		assertEquals( "should be no mandatory triples in pattern", 0, triples.size() );
-		assertEquals( "should be one optional chain", 1, optionals.size() );
-		assertEquals( "the single optional chain should have one element", 1, optionals.get(0).size() );
-		RDFQ.Triple t = optionals.get(0).get(0);
-	//
-		assertEquals( RDFQ.var( "?item" ), t.S );
-		assertEquals( RDFQ.uriRaw( Shorts.NS + "backwards" ), t.P );
-		assertTrue( t.O instanceof Variable );
+        assertEquals("should be one optional chain", 1, optionals.nested.size());
+        assertEquals(RDFQ.var("?item"), optionals.root);
+        assertTrue(optionals.nested.containsKey(Shorts.NS + "backwards"));
+        RDFQ.Tree inner = new ArrayList<>(optionals.nested.entrySet()).get(0).getValue();
+        assertEquals("the single optional chain should have one element", 0, inner.nested.size());
+        assertTrue(inner.root instanceof Variable);
+        assertTrue(optionals.nested.containsKey(Shorts.NS + "backwards"));
 	//
 		assertEquals( "should be one filter expression", 1, filters.size() );
-		assertEquals( RDFQ.apply("!", RDFQ.apply( "bound", t.O ) ), filters.get(0) );
+        assertEquals(RDFQ.apply("!", RDFQ.apply("bound", inner.root)), filters.get(0));
 		}
 	
 	static final Model model = MakeData.specModel
