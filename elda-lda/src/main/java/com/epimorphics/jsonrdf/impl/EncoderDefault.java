@@ -22,6 +22,7 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.XSD;
 import org.apache.jena.atlas.json.*;
 import org.slf4j.Logger;
@@ -190,6 +191,8 @@ public class EncoderDefault implements EncoderPlugin {
                 jw.value(spelling);
             } else if (dt.equals(XSDDatatype.XSDstring)) {
                 jw.value(spelling); // ISSUE with escaping things -- hangover?
+            } else if (dt.equals(RDF.dtLangString)) {
+                jw.value(spelling);
             } else {
                 if (showUnhandled) {
                     // Issue #178
