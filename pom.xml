@@ -23,7 +23,7 @@
 
     <ver.jena>5.6.0</ver.jena>
     <ver.junit>4.13.2</ver.junit>
-    <ver.jersey>4.0.0</ver.jersey>
+    <ver.jersey>3.1.11</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>2.0.17</ver.slf4j>
     <ver.velocity>2.4.1</ver.velocity>
