@@ -158,13 +158,23 @@
     </dependency>
   </dependencies>
 
-  <distributionManagement>
-    <repository>
-      <id>epi-public-s3-release</id>
-      <name>Epimorphics S3 release repository</name>
-      <url>s3://epi-repository/release</url>
-    </repository>
-  </distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>epi-public-s3-release</id>
+            <name>Epimorphics S3 release repository</name>
+            <url>s3://epi-repository/release</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+
+        <snapshotRepository>
+            <id>epi-public-s3-snapshot</id>
+            <name>Epimorphics S3 snapshot repository</name>
+            <url>s3://epi-repository/snapshot</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </snapshotRepository>
+    </distributionManagement>
 
   <repositories>
 
