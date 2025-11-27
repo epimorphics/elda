@@ -23,7 +23,7 @@
 
     <ver.jena>5.6.0</ver.jena>
     <ver.junit>4.13.2</ver.junit>
-    <ver.jersey>4.0.0</ver.jersey>
+    <ver.jersey>3.1.11</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>2.0.17</ver.slf4j>
     <ver.velocity>2.4.1</ver.velocity>
@@ -158,13 +158,23 @@
     </dependency>
   </dependencies>
 
-  <distributionManagement>
-    <repository>
-      <id>epi-public-s3-release</id>
-      <name>Epimorphics S3 release repository</name>
-      <url>s3://epi-repository/release</url>
-    </repository>
-  </distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>epi-public-s3-release</id>
+            <name>Epimorphics S3 release repository</name>
+            <url>s3://epi-repository/release</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+
+        <snapshotRepository>
+            <id>epi-public-s3-snapshot</id>
+            <name>Epimorphics S3 snapshot repository</name>
+            <url>s3://epi-repository/snapshot</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </snapshotRepository>
+    </distributionManagement>
 
   <repositories>
 
