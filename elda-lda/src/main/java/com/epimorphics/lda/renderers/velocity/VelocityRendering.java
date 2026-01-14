@@ -82,7 +82,7 @@ public class VelocityRendering
     /**
      * Velocity property for configuring loader path
      */
-    public static final String VELOCITY_FILE_RESOURCE_LOADER_PATH = "file.resource.loader.path";
+    public static final String VELOCITY_FILE_RESOURCE_LOADER_PATH = "resource.loader.file.path";
 
     /***********************************/
     /* Static variables                */
