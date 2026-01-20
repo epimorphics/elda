@@ -29,6 +29,7 @@ import com.epimorphics.util.QueryUtil;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.util.Closure;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
@@ -293,19 +294,19 @@ public class View {
         }
     }
 
-    public String fetchDescriptions(Controls c, State s) {
+    public String fetchDescriptions(Controls c, State s, boolean encloseDescribe) {
         Times t = c.times;
         switch (type) {
             case T_DESCRIBE: {
                 String detailsQuery = fetchByGivenPropertyChains(s, chains);
-                String describeQuery = describeBySelectedItems(s, s.roots);
+                String describeQuery = describeBySelectedItems(s, s.roots, encloseDescribe);
                 t.addToViewQuerySize(detailsQuery);
                 t.addToViewQuerySize(describeQuery);
                 return describeQuery;
             }
 
             case T_ALL: {
-                String detailsQuery = describeBySelectedItems(s, s.roots);
+                String detailsQuery = describeBySelectedItems(s, s.roots, encloseDescribe);
                 String chainsQuery = fetchByGivenPropertyChains(s, chains);
                 addAllObjectLabels(s);
                 t.addToViewQuerySize(detailsQuery);
@@ -360,10 +361,22 @@ public class View {
         return queryString;
     }
 
-    private String describeBySelectedItems(State s, List<Resource> allRoots) {
+    private String describeBySelectedItems(State s, List<Resource> allRoots, boolean encloseDescribe) {
         String query = createDescribeQueryForItems(s, allRoots);
         Query describeQuery = QueryUtil.create(query);
-        for (Source x : s.sources) s.m.add(x.executeDescribe(describeQuery));
+        for (Source x : s.sources) {
+            Model m = s.m;
+            Model description = x.executeDescribe(describeQuery);
+            if (encloseDescribe) {
+                for (Resource root : allRoots) {
+                    Resource res = root.inModel(description);
+                    Model closure = Closure.closure(res, false);
+                    m.add(closure);
+                }
+            } else {
+                m.add(description);
+            }
+        }
         return query.toString();
     }
 
@@ -449,7 +462,7 @@ public class View {
         List<Source> sources = spec.getDescribeSources();
         return this.isTemplateView()
                 ? this.viewByTemplate(roots, m, spec, sources, graphName)
-                : this.fetchDescriptions(c, new View.State(roots, m, sources, vars, graphName));
+                : this.fetchDescriptions(c, new View.State(roots, m, sources, vars, graphName), spec.getEncloseDescribe());
     }
 
     public String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources, String graphName) {

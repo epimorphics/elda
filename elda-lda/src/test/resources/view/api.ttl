@@ -1,0 +1,51 @@
+## Common prefixes.
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:             <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:              <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:             <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:              <http://www.w3.org/2001/XMLSchema#> .
+@prefix api:              <http://purl.org/linked-data/api/vocab#> .
+@prefix skos:             <http://www.w3.org/2004/02/skos/core#> .
+@prefix geo:              <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix spatialrelations: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix admingeo: 	      <http://statistics.data.gov.uk/def/administrative-geography/> .
+@prefix qb:      	      <http://purl.org/linked-data/cube#> .
+@prefix time:	 	      <http://www.w3.org/2006/time#> .
+@prefix interval:         <http://reference.data.gov.uk/def/intervals/> .
+@prefix dgu: 		      <http://reference.data.gov.uk/def/reference/> .
+@prefix bw:               <http://environment.data.gov.uk/id/bathing-water/> .
+@prefix bwsp:             <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/> .
+@prefix bwq:  	          <http://environment.data.gov.uk/def/bathing-water-quality/> .
+@prefix bwq-iss:          <http://environment.data.gov.uk/data/bathing-water-quality/in-season/slice/> .
+@prefix bw-def:           <http://environment.data.gov.uk/def/bathing-water/> .
+@prefix ef-def:           <http://location.data.gov.uk/def/ef/SamplingPoint/> .
+@prefix dct:			  <http://purl.org/dc/terms/> .
+@prefix t:                <http://environment.data.gov.uk/api#> .
+@prefix dgu:			  <http://reference.data.gov.uk/def/reference/>	.
+@prefix void:			  <http://rdfs.org/ns/void#> .
+@prefix elda:   <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix :       <http://www.epimorphics.com/tools/example#> .
+
+:encloseDescribe
+	a api:API ;
+	api:sparqlEndpoint <local:CURRENT-TEST>;
+	api:endpoint t:bathingWaters ;
+	elda:encloseDescribe true ;
+	.
+
+:default
+	a api:API ;
+	api:sparqlEndpoint <local:CURRENT-TEST>;
+	api:endpoint t:bathingWaters ;
+	.
+
+t:bathingWaters
+  a api:ListEndpoint ;
+  api:uriTemplate 		    "/doc/bathing-water" ;
+  api:exampleRequestPath 	"/doc/bathing-water" ;
+  api:viewer api:describeViewer;
+  api:defaultViewer api:describeViewer;
+  api:selector [
+    api:filter "type=BathingWater" ;
+    # api:sort   "samplingPoint.samplePointNotation";
+  ] .
