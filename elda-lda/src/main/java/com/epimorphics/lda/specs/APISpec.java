@@ -102,6 +102,8 @@ public class APISpec extends SpecCommon {
 
     protected final boolean purging;
 
+    protected final boolean encloseDescribe;
+
     protected final Boolean enableForwardHeaders;
 
     protected final MetaConfig metaConfig;
@@ -150,6 +152,7 @@ public class APISpec extends SpecCommon {
         this.enableCounting = RDFUtils.getOptionalBooleanValue(root, ELDA_API.enableCounting, Boolean.FALSE);
         this.propertyExpiryTimes = PropertyExpiryTimes.assemble(root.getModel());
         this.enableForwardHeaders = RDFUtils.getBooleanValue(root, ELDA_API.enableForwardHeaders, true);
+        this.encloseDescribe = RDFUtils.getBooleanValue(root, ELDA_API.encloseDescribe, false);
         //
         this.metaConfig = new MetaConfig(root, mc);
         //
@@ -395,5 +398,9 @@ public class APISpec extends SpecCommon {
 
     public Boolean getEnableForwardHeaders() {
         return enableForwardHeaders;
+    }
+
+    public Boolean getEncloseDescribe() {
+        return encloseDescribe;
     }
 }

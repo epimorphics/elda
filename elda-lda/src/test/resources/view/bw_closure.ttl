@@ -1,0 +1,28 @@
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix onsadmingeo: <http://statistics.data.gov.uk/def/administrative-geography/> .
+@prefix def-geom: <http://location.data.gov.uk/def/common/Geometry/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix spatialrelations: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix def-ef: <http://location.data.gov.uk/def/ef/SamplingPoint/> .
+@prefix dgu:   <http://reference.data.gov.uk/def/reference/> .
+@prefix osadmingeo: <http://data.ordnancesurvey.co.uk/ontology/admingeo/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix bw:    <http://environment.data.gov.uk/id/bathing-water/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix geometry: <http://data.ordnancesurvey.co.uk/ontology/geometry/> .
+@prefix api:   <http://purl.org/linked-data/api/vocab#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix def-bw: <http://environment.data.gov.uk/def/bathing-water/> .
+
+bw:     a                     void:Dataset , dgu:URIset ;
+        rdfs:label            "Bathing waters monitored by the Environment Agency for England and Wales."@en ;
+        dcterms:description   "URI Set of Bathing Waters in England and Wales monitored by the Environment Agency for compliance with the EU Bathing Water Directive"@en ;
+        dcterms:license       <http://reference.data.gov.uk/id/open-government-licence> ;
+        dcterms:modified      "2025-11-25T09:05:57.727Z"^^xsd:dateTime , "2014-06-30T15:53:44.397Z"^^xsd:dateTime ;
+        dcterms:source        <http://environment.data.gov.uk/sources/bwq/eaew/input/2025_ea_site_reference.csv> , <http://environment.data.gov.uk/sources/bwq/eaew/input/reference-EngWal_bw_site_140630v3-20140630-155343-40.csv> ;
+        void:dataDump         <http://environment.data.gov.uk/sources/bwq/eaew/output/reference.ttl> ;
+        void:uriRegexPattern  "http://environment.data.gov.uk/id/bathing-water/.*" ;
+        void:vocabulary       <http://www.w3.org/2004/02/skos/core> , geometry: , osadmingeo: , def-bw: , spatialrelations: , dgu: , onsadmingeo: , def-ef: , <http://www.w3.org/ns/org> , <http://www.w3.org/2003/01/geo/wgs84_pos> , def-geom: ;
+        dgu:itemType          def-bw:BathingWater ;
+        dgu:status            <http://reference.data.gov.uk/def/status/draft> .

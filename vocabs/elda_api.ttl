@@ -125,6 +125,10 @@ elda:enableForwardHeaders a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:encloseDescribe a rdf:Property
+	; rdfs:comment "Determine whether to apply a forward closure to describe query results."
+	.
+
 elda:enhanceViewWith a rdf:Property
 	; rdfs:comment ""
 	.
