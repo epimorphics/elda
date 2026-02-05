@@ -95,6 +95,7 @@ public class ELDA_API  extends API {
     /** <p></p> */
     public static final Property enableForwardHeaders = M_MODEL.createProperty( "http://www.epimorphics.com/vocabularies/lda#enableForwardHeaders" );
 
+    /** <p>Determine whether to apply a forward closure to describe query results.</p> */    
     public static final Property encloseDescribe = M_MODEL.createProperty( "http://www.epimorphics.com/vocabularies/lda#encloseDescribe" );
 
     /** <p></p> */
