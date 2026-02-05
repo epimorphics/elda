@@ -1,4 +1,4 @@
-4.0.0
+3.0.0
 -----
 
 * Updated to Java 21, Jakarta EE 11, Jakarta Servlet 6 and Tomcat 11.
