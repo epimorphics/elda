@@ -215,7 +215,7 @@
 ## Show a literal-value
 #macro( propertyObjectLiteral $lit )
   <div class="rdf object literal">
-    $esc.escapeHtml( $lit.getLexicalForm() )
+    $esc.escapeHtml4( $lit.getLexicalForm() )
   </div>
 #end
 
