@@ -50,9 +50,9 @@ public class SparqlSource extends SourceBase implements Source {
 
     protected final Lock lock = new LockNone();
 
-    protected final String basicUser;
+    public final String basicUser;
 
-    protected final char[] basicPassword;
+    public final char[] basicPassword;
 
     protected final HttpClient httpClient;
 
@@ -99,10 +99,11 @@ public class SparqlSource extends SourceBase implements Source {
 
         HttpClient.Builder builder = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1);
         if (this.basicUser != null) {
+            PasswordAuthentication pa = new PasswordAuthentication(basicUser, basicPassword);
             builder.authenticator(new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(basicUser, basicPassword);
+                    return pa;
                 }
             });
         }
