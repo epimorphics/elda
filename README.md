@@ -2,7 +2,7 @@
 
 <p>
 	Elda is a Java implementation of the 
-	<a href="http://code.google.com/p/linked-data-api/" rel="nofollow">Linked Data API</a>,
+	<a href="https://github.com/UKGovLD/linked-data-api/blob/wiki/Specification.md" rel="nofollow">Linked Data API</a>,
 	which provides a configurable way to access RDF data using simple 
 	RESTful URLs that are translated into queries to a SPARQL endpoint. 
 	The API developer (probably you) writes an API spec (in RDF) which 
