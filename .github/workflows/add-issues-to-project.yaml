@@ -1,0 +1,16 @@
+name: Add new issues to Platform Coordination project
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  add-to-project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@v1.0.2
+        with:
+          project-url: https://github.com/orgs/epimorphics/projects/57
+          github-token: ${{ secrets.EPI_ADD_ISSUES_TO_ORGANISATION_PROJECT }}
