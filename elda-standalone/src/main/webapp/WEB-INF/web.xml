@@ -29,7 +29,7 @@
         <param-value>^/(standalone/(scripts|css|images|velocity)/.*)?</param-value>
     </init-param>
   </filter>
- 
+
   <filter-mapping>
     <filter-name>LogRequestFilter</filter-name>
     <url-pattern>/*</url-pattern>
@@ -103,6 +103,15 @@
   <listener>
     <listener-class>com.epimorphics.lda.restlets.RouterRestlet$Init</listener-class>
   </listener>
+
+  <listener>
+    <listener-class>com.epimorphics.lda.metrics.PrometheusServletContextListener</listener-class>
+  </listener>
+
+  <context-param>
+    <param-name>enableJvmMetrics</param-name>
+    <param-value>true</param-value>
+  </context-param>
 
   <!-- ==================================================================== -->
 
