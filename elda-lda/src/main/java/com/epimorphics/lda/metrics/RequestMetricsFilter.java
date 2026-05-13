@@ -26,7 +26,7 @@ public class RequestMetricsFilter extends HttpFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        requestTimer = Timer.builder("request_duration")
+        requestTimer = Timer.builder("http_request_duration")
                 .description("The time taken to perform each request.")
                 .sla(
                         Duration.ofMillis(30),
@@ -40,15 +40,15 @@ public class RequestMetricsFilter extends HttpFilter {
                 )
                 .register(registry);
 
-        successCounter = Counter.builder("request_status")
+        successCounter = Counter.builder("http_request_status")
                 .tag("status", "2xx")
                 .description("Requests completed successfully.")
                 .register(registry);
-        clientErrorCounter = Counter.builder("request_status")
+        clientErrorCounter = Counter.builder("http_request_status")
                 .tag("status", "4xx")
                 .description("Requests rejected due to client error.")
                 .register(registry);
-        serverErrorCounter = Counter.builder("request_status")
+        serverErrorCounter = Counter.builder("http_request_status")
                 .tag("status", "5xx")
                 .description("Requests failed due to internal error.")
                 .register(registry);
