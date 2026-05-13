@@ -141,7 +141,6 @@ public class VelocityRendering
             times.setRenderedSize(cos.size());
             times.setRenderDuration(System.currentTimeMillis() - base, vr.suffix());
         } catch (Exception e) {
-            e.printStackTrace(System.err);
             log.warn("{} ({})", e.getMessage(), e);
             throw new VelocityRenderingException();
         } finally {
