@@ -46,6 +46,11 @@
     </filter>
 
     <filter-mapping>
+        <filter-name>LogRequestFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
         <filter-name>Jersey Web Application</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
