@@ -18,6 +18,7 @@
 package com.epimorphics.lda.core;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.exceptions.BadRequestException;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
@@ -26,6 +27,7 @@ import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.URIUtils;
+import jakarta.ws.rs.core.UriBuilderException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import jakarta.ws.rs.core.UriBuilder;
@@ -97,13 +99,16 @@ public interface APIEndpoint {
          * that do not affect the SPARQL select and view queries removed.
          */
         public URI getURIplain() {
-            URI x = UriBuilder.fromUri(URIUtils.changeFormatSuffix(requestURI, formatNames, ""))
-                    .replaceQueryParam(QueryParameter._FORMAT)
-                    .replaceQueryParam(QueryParameter._METADATA)
-                    .replaceQueryParam(QueryParameter._MARK)
-                    .replaceQueryParam(QueryParameter.callback)
-                    .build();
-            return x;
+            try {
+                return UriBuilder.fromUri(URIUtils.changeFormatSuffix(requestURI, formatNames, ""))
+                        .replaceQueryParam(QueryParameter._FORMAT)
+                        .replaceQueryParam(QueryParameter._METADATA)
+                        .replaceQueryParam(QueryParameter._MARK)
+                        .replaceQueryParam(QueryParameter.callback)
+                        .build();
+            } catch (UriBuilderException ube) {
+                throw new BadRequestException("The requested query string was invalid: " + requestURI.toString());
+            }
         }
     }
 

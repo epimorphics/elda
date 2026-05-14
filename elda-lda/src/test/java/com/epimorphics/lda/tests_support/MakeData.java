@@ -138,7 +138,9 @@ public class MakeData {
         for (int i = 0; i < pairs.length; i++) {
             if (pairs[i].isEmpty()) break;
             String[] pair = pairs[i].split("=");
-            result.add(pair[0], pair[1]);
+            if (pair.length > 1) {
+                result.add(pair[0], pair[1]);
+            }
         }
         return result;
     }
