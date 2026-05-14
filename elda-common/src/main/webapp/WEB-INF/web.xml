@@ -61,6 +61,10 @@
         <listener-class>com.epimorphics.lda.restlets.RouterRestlet$Init</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>com.epimorphics.lda.metrics.PrometheusServletContextListener</listener-class>
+    </listener>
+
     <!-- ==================================================================== -->
 
     <welcome-file-list>
