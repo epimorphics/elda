@@ -116,7 +116,7 @@ public class ConfigLoader {
             throw new RuntimeException("on line " + where.lineNumber + " of " + where.pathName, re);
 
         } catch (RuntimeException e) {
-            log.error("error loading spec file '{}': {}", thisSpecPath, e);
+            log.error("Failed to load spec file: " + thisSpecPath, e);
             return ModelFactory.createDefaultModel();
 
         } finally {

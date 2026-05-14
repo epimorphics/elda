@@ -141,14 +141,14 @@ public class VelocityRendering
             times.setRenderedSize(cos.size());
             times.setRenderDuration(System.currentTimeMillis() - base, vr.suffix());
         } catch (Exception e) {
-            log.warn("{} ({})", e.getMessage(), e);
+            log.warn(e.getMessage(), e);
             throw new VelocityRenderingException();
         } finally {
             if (cos != null) {
                 try {
                     cos.close();
                 } catch (IOException e) {
-                    log.warn("failed to close count stream: {} ({})", e.getMessage(), e);
+                    log.warn("failed to close count stream: " + e.getMessage(), e);
                 }
             }
         }

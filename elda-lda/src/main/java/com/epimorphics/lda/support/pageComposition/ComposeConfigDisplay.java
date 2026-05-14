@@ -162,7 +162,7 @@ public class ComposeConfigDisplay {
             for (String name : names) {
                 Value v = b.get(name);
                 if (v == null) {
-                    log.error("binding for '{}' is null or non-Value; ignored.", name);
+                    log.warn("Binding for '{}' is null or non-Value; ignored.", name);
                 } else {
                     String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();
                     String type =

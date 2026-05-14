@@ -100,7 +100,7 @@ public class PageMetadata
         try {
             return new Execution(this, pageRoot().getPropertyValue(API.wasResultOf).asResource());
         } catch (NullPointerException p) {
-            log.error(">> null pointer exception in rendering result-of", p);
+            log.error("Failed to render value of result-of.", p);
             throw p;
         }
     }
