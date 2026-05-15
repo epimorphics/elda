@@ -334,13 +334,13 @@ public class VelocityRendering
                 try {
                     p.load(is);
                 } catch (IOException e) {
-                    log.warn("IO exception while reading properties: {} ({})", e.getMessage(), e);
+                    log.warn("IO exception while reading properties: {}", e.getMessage(), e);
                     throw new WrappedIOException(e);
                 } finally {
                     try {
                         is.close();
                     } catch (IOException e) {
-                        log.warn("IO exception while closing properties input stream: {} ({})", e.getMessage(), e);
+                        log.warn("IO exception while closing properties input stream: {}", e.getMessage(), e);
                         throw new WrappedIOException(e);
                     }
                 }

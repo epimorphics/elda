@@ -670,7 +670,7 @@ public class RouterRestlet {
                     response.writeAll(t, os);
                 } catch (Throwable e) {
                     String message = String.format("Error while sending response: '%s'", e.getMessage());
-                    log.error("{}", e);
+                    log.error("message", e);
                     StreamUtils.writeAsUTF8(response.getPoison() + "\n" + message, os);
                     os.flush();
                 }

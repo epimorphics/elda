@@ -74,7 +74,7 @@ public class ConfigLoader {
                 APISpec apiSpec = new APISpec(prefixPath, appName, EldaFileManager.get(), specRoot, ml);
                 entryList.add(new StashEntry(thisSpecPath, specRoot, apiSpec));
             } catch (RuntimeException e) {
-                log.error("error processing config from file '{}': {}", thisSpecPath, e);
+                log.error("Error processing config from file {}", thisSpecPath, e);
             }
 
         }

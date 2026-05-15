@@ -101,7 +101,7 @@ public class JSONRenderer implements Renderer {
             writer.write(after);
             writer.flush();
         } catch (Exception e) {
-            log.error("failed to encode model: stacktrace follows: {}", e);
+            log.error("Failed to encode model due to error.", e);
             throw new WrappedException(e);
         }
         final String content = UTF8.toString(os);
