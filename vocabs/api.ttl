@@ -374,6 +374,8 @@ api:variableBinding a rdf:Property.
 
 api:termBinding a rdf:Property.
 
+api:isShortName a rdf:Property.
+
 api:Page a rdfs:Class.
 
 api:HtmlFormatter a rdfs:Class.

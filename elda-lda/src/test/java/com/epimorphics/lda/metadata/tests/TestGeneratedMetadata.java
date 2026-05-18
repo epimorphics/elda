@@ -67,7 +67,8 @@ public class TestGeneratedMetadata {
                 return false;
             }
         };
-        EndpointMetadata em = new EndpointMetadata(spec, thisPage, pageNumber, noBindings);
+        ShortnameService sns = new StandardShortnameService();
+        EndpointMetadata em = new EndpointMetadata(spec, thisPage, pageNumber, noBindings, sns);
         //
         PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix("this", "http://example.com/root#");
         Model toScan = ModelIOUtils.modelFromTurtle(":a <http://example.com/root#predicate> :b.");
@@ -75,7 +76,6 @@ public class TestGeneratedMetadata {
         Resource predicate = toScan.createProperty("http://example.com/root#predicate");
         Model meta = ModelFactory.createDefaultModel();
         Resource exec = meta.createResource("fake:exec");
-        ShortnameService sns = new StandardShortnameService();
 
         CompleteContext cc =
                 new CompleteContext(CompleteContext.Mode.PreferPrefixes, sns.asContext(), pm);
