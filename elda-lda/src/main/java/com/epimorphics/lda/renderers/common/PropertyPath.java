@@ -262,7 +262,7 @@ public class PropertyPath {
                 } else {
                     String uri = snr.expand(segment);
                     if (uri == null) {
-                        log.warn("[{}]: warning: property path uses short name '{}' which does not have an expansion to a URI", segment);
+                        log.warn("Warning: property path uses short name '{}' which does not have an expansion to a URI", segment);
                         properties.add(STAR);
                     } else {
                         properties.add(ResourceFactory.createProperty(uri));

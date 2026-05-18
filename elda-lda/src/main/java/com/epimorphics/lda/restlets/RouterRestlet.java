@@ -536,8 +536,7 @@ public class RouterRestlet {
             return ErrorPages.respond(forErrorHandling, servCon, "query_parse_exception", e.getMessage(), EldaException.SERVER_ERROR);
 
         } catch (Throwable e) {
-            log.error("general failure: {}", e.getClass().getCanonicalName() + ": " + e.getMessage());
-            e.printStackTrace(System.err);
+            log.error("general failure: " + e.getClass().getCanonicalName() + ": " + e.getMessage(), e);
             StatsValues.endpointException();
             return ErrorPages.respond(forErrorHandling, servCon, "general_exception", e.getMessage(), EldaException.SERVER_ERROR);
         }
@@ -670,9 +669,8 @@ public class RouterRestlet {
                 try {
                     response.writeAll(t, os);
                 } catch (Throwable e) {
-                    String message = String.format("Error while sending response: '%s'", e);
-                    log.error("{}", message);
-                    e.printStackTrace(System.err);
+                    String message = String.format("Error while sending response: '%s'", e.getMessage());
+                    log.error("message", e);
                     StreamUtils.writeAsUTF8(response.getPoison() + "\n" + message, os);
                     os.flush();
                 }

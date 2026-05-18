@@ -89,7 +89,7 @@ public class CombinedSource extends SourceBase implements Source {
     }
 
     private Model dataFrom(Source s) {
-        log.info("[{}]: getting model data from source '{}'", s);
+        log.info("Getting model data from source: {}", s);
         String queryString = "construct " + triplesFor(constructs) + " where " + triplesFor(matches) + "";
         return s.executeConstruct(QueryUtil.create(queryString));
     }

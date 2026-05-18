@@ -141,15 +141,14 @@ public class VelocityRendering
             times.setRenderedSize(cos.size());
             times.setRenderDuration(System.currentTimeMillis() - base, vr.suffix());
         } catch (Exception e) {
-            e.printStackTrace(System.err);
-            log.warn("{} ({})", e.getMessage(), e);
+            log.warn(e.getMessage(), e);
             throw new VelocityRenderingException();
         } finally {
             if (cos != null) {
                 try {
                     cos.close();
                 } catch (IOException e) {
-                    log.warn("failed to close count stream: {} ({})", e.getMessage(), e);
+                    log.warn("failed to close count stream: " + e.getMessage(), e);
                 }
             }
         }
@@ -335,13 +334,13 @@ public class VelocityRendering
                 try {
                     p.load(is);
                 } catch (IOException e) {
-                    log.warn("IO exception while reading properties: {} ({})", e.getMessage(), e);
+                    log.warn("IO exception while reading properties: {}", e.getMessage(), e);
                     throw new WrappedIOException(e);
                 } finally {
                     try {
                         is.close();
                     } catch (IOException e) {
-                        log.warn("IO exception while closing properties input stream: {} ({})", e.getMessage(), e);
+                        log.warn("IO exception while closing properties input stream: {}", e.getMessage(), e);
                         throw new WrappedIOException(e);
                     }
                 }

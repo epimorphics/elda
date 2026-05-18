@@ -87,7 +87,7 @@ public class XMLRenderer implements Renderer {
             // save the xml for later analysis or use in gold tests.
             if (writingGold) {
                 new File("/tmp/gold").mkdirs();
-                System.err.println(">> saving rendering to /tmp/gold/*");
+                log.info("Saving rendering to /tmp/gold/*");
 
                 writeModel(mm.getObjectModel(), "/tmp/gold/object_model");
                 writeModel(mm.getMetaModel(), "/tmp/gold/meta_model");
