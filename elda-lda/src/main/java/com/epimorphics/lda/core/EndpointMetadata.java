@@ -48,7 +48,7 @@ public class EndpointMetadata {
     protected final boolean isListEndpoint;
     protected final boolean isParameterBasedFormat;
 
-    private final ShortnameService sns;
+    protected final ShortnameService sns;
 
     public EndpointMetadata(EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings, ShortnameService sns) {
         this.bindings = bindings;
