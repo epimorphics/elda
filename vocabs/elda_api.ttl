@@ -297,6 +297,11 @@ elda:termBinding a rdf:Property
     ; rdfs:comment "Property from page to term bindings"
     .
 
+elda:isShortName a rdf:Property
+    ; rdfs:label "isShortName"
+    ; rdfs:comment "Determines whether a term binding corresponds to a valid short name for filtering purposes."
+    .
+
 elda:textContentProperty a rdf:Property
 	; rdfs:comment ""
 	.

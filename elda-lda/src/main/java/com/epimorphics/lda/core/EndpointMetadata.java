@@ -14,6 +14,7 @@ import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.CompleteContext;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.EndpointDetails;
@@ -47,13 +48,16 @@ public class EndpointMetadata {
     protected final boolean isListEndpoint;
     protected final boolean isParameterBasedFormat;
 
-    public EndpointMetadata(EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings) {
+    protected final ShortnameService sns;
+
+    public EndpointMetadata(EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings, ShortnameService sns) {
         this.bindings = bindings;
         this.thisPage = thisPage;
         this.pageNumber = pageNumber;
         this.isListEndpoint = ep.isListEndpoint();
         this.isParameterBasedFormat = ep.hasParameterBasedContentNegotiation();
         this.thisPageAsURI = URIUtils.newURI(thisPage.getURI());
+        this.sns = sns;
     }
 
     public static void addAllMetadata
@@ -144,7 +148,7 @@ public class EndpointMetadata {
             if (suppress_IPTO == false) content.addProperty(FOAF.isPrimaryTopicOf, thisMetaPage);
         }
         //
-        EndpointMetadata em = new EndpointMetadata(details, thisMetaPage, "" + page, bindings);
+        EndpointMetadata em = new EndpointMetadata(details, thisMetaPage, "" + page, bindings, spec.getAPISpec().getShortnameService());
         Model metaModel1 = mergedModels.getMetaModel();
         Model mergedModels1 = mergedModels.getMergedModel();
         //
@@ -327,6 +331,9 @@ public class EndpointMetadata {
                 exec.addProperty(API.termBinding, tb);
                 tb.addProperty(API.label, shorty);
                 tb.addProperty(API.property, term);
+                if (sns.expand(shorty) == null) {
+                    tb.addProperty(ELDA_API.isShortName, ResourceFactory.createTypedLiteral(true));
+                }
             }
         }
     }

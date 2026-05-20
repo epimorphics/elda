@@ -127,6 +127,7 @@ public class BuiltIn {
         magic.add(DCTerms.isVersionOf);
         magic.add(ELDA_API.listURL);
         magic.add(ELDA_API.sparqlQuery);
+        magic.add(ELDA_API.isShortName);
         magic.add(FOAF.isPrimaryTopicOf);
         magic.add(FOAF.primaryTopic);
         magic.add(OpenSearch.itemsPerPage);
