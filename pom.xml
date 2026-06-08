@@ -157,6 +157,11 @@
       <artifactId>logback-classic</artifactId>
       <version>1.5.20</version>
     </dependency>
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>9.0</version>
+    </dependency>
 
     <dependency>
       <groupId>jakarta.servlet</groupId>
