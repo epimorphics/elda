@@ -8,7 +8,7 @@
     <version>3.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>elda-standalone</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <name>elda-standalone</name>
   <description>instant Elda webapp</description>
 
@@ -18,21 +18,12 @@
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
       <version>${tomcat.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
       <version>${tomcat.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.epimorphics.lda</groupId>
-      <artifactId>elda-assets</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
     </dependency>
 
     <dependency>
@@ -57,6 +48,30 @@
   <build>
     <finalName>elda-standalone</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>run.standalone</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
