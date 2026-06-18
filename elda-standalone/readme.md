@@ -20,15 +20,15 @@ Note that the sample API does not support HTML rendering.
 ### Configuring the Web Server
 
 To run the application with your own web server configuration,
-set the `elda_webapp_path` environment variable to the path to your web app directory.
+set the `ELDA_WEBAPP_PATH` environment variable to the path to your web app directory.
 This directory **must contain** a `web.xml` file which configures the web server.
 
 It must also contain the ELDA API specs and static resources (velocity templates, scripts, stylesheets etc.)
 you want to serve.
 
-To run the web server with a context path, set the `elda_context_path` environment variable to the context path.
+To run the web server with a context path, set the `ELDA_CONTEXT_PATH` environment variable to the context path.
 
-To run the web server with an alternate port (the default is 8080), set the `elda_port` environment variable to the port number.
+To run the web server with an alternate port (the default is 8080), set the `ELDA_PORT` environment variable to the port number.
 
 ### Docker Image
 
@@ -37,9 +37,10 @@ To build the standalone application as a Docker image, run:
 
 The image does not contain any web server configuration or ELDA API specs,
 hence these must be mounted to a running container as a volume.
+The default web app directory is `/etc/elda`.
 
 To run the image in a Docker container, run:
-* `docker run -p 8080:8080 -v {host webapp dir}:{container webapp dir} -e elda_webapp_path={container webapp dir} elda/standalone:test`
+* `docker run -p 8080:8080 -v {host webapp dir}:{container webapp dir} -e ELDA_WEBAPP_PATH={container webapp dir} elda/standalone:test`
 
 For example, to run with the sample web server:
-* `docker run -p 8080:8080  -v ./src/main/webapp:/etc/elda -e elda_webapp_path=/etc/elda elda/standalone:test`
+* `docker run -p 8080:8080  -v ./src/main/webapp:/etc/elda -e ELDA_WEBAPP_PATH=/etc/elda elda/standalone:test`

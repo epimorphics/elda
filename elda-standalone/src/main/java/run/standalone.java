@@ -19,13 +19,13 @@ public class standalone {
 	public static void main( String [] args ) throws Exception {
 		RIOT.init();
 	    Tomcat server = new Tomcat();
-	    String portString = System.getProperty ("elda_port");
+	    String portString = System.getProperty ("ELDA_PORT");
 		int port = portString != null ? Integer.parseInt(portString) : 8080;
 
-		String ctxPath = System.getenv("elda_context_path");
+		String ctxPath = System.getenv("ELDA_CONTEXT_PATH");
 		ctxPath = ctxPath != null ? ctxPath : "/standalone";
 
-		String basePath = System.getenv("elda_webapp_path");
+		String basePath = System.getenv("ELDA_WEBAPP_PATH");
 		basePath = basePath != null ? basePath : "src/main/webapp";
 
         Connector connector = new Connector();
