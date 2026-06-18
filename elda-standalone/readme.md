@@ -12,7 +12,7 @@ To run:
 
 By default, the application loads a web server configuration, including ELDA API specs,
 from the `src/main/webapp` directory, which contains a small sample API.
-When running with the sample API, check http://localhost:8080/again/games.ttl to confirm that the
+When running with the sample API, check http://localhost:8080/standalone/again/games.ttl to confirm that the
 server is running correctly.
 
 Note that the sample API does not support HTML rendering.
@@ -27,6 +27,8 @@ It must also contain the ELDA API specs and static resources (velocity templates
 you want to serve.
 
 To run the web server with a context path, set the `ELDA_CONTEXT_PATH` environment variable to the context path.
+The default context path is `/standalone`.
+To run without a context path set the environment variable to `/`.
 
 To run the web server with an alternate port (the default is 8080), set the `ELDA_PORT` environment variable to the port number.
 
