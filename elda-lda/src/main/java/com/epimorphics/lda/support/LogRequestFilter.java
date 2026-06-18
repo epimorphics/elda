@@ -86,7 +86,7 @@ public class LogRequestFilter implements Filter {
             if (ID == null) ID = generateID(httpRequest);
 
             String fullID = ID.replace("*", seqId);
-            MDC.pushByKey("request_id", fullID);
+            MDC.put("request_id", fullID);
 
             log.info("Request {}", fullPath);
 
@@ -103,7 +103,7 @@ public class LogRequestFilter implements Filter {
                     , NameUtils.formatDuration(endTime - startTime)
             );
 
-            MDC.popByKey("request_id");
+            MDC.remove("request_id");
         }
     }
 
