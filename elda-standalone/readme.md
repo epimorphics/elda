@@ -32,6 +32,12 @@ To run without a context path set the environment variable to `/`.
 
 To run the web server with an alternate port (the default is 8080), set the `ELDA_PORT` environment variable to the port number.
 
+| Env Var | Description | Default |
+|---------|-------------|---------|
+| `ELDA_WEBAPP_PATH` | The location of the web app directory. | src/main/webapp |
+| `ELDA_CONTEXT_PATH` | The context path to the ELDA API. | /standalone |
+| `ELDA_PORT` | The port on which the web server answers requests. | 8080 |
+
 ### Docker Image
 
 To build the standalone application as a Docker image, run:
