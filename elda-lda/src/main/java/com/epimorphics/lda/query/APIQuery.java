@@ -783,6 +783,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
         q.append(constructBGP(pl));
 
+        q.append("FILTER (!isBlank(").append(SELECT_VAR.name()).append("))\n");
         appendFilterExpressions(pl, q);
 
         if (graphName != null)
