@@ -100,4 +100,10 @@ public class TestDateTime {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31Z", XSDDatatype.XSDdate);
         assertEquals("1999-05-31", RDFUtil.formatDateTime(l, true));
     }
+
+    @Test
+    public void testDateTimeInvalidFormat() {
+        Literal l = ResourceFactory.createTypedLiteral("20xx", XSDDatatype.XSDdateTime);
+        assertEquals("20xx", RDFUtil.formatDateTime(l, true));
+    }
 }
