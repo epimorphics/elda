@@ -40,7 +40,7 @@
     <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
 
     <init-param>
-      <param-name>jersey.config.property.packages</param-name>
+      <param-name>jersey.config.server.provider.packages</param-name>
       <param-value>com.epimorphics.lda.restlets</param-value>
     </init-param>
 
@@ -53,25 +53,18 @@
       <param-name>jersey.spi.container.ContainerRequestFilters</param-name>
       <param-value>org.glassfish.jersey.api.container.filter.PostReplaceFilter</param-value>
     </init-param>
+
+    <init-param>
+      <param-name>jersey.config.servlet.filter.staticContentRegex</param-name>
+      <param-value>/velocity/.+</param-value>
+    </init-param>
   </filter>
 
   <!-- ==================================================================== -->
 
   <filter-mapping>
     <filter-name>Jersey Web Application</filter-name>
-    <url-pattern>/api-config/*</url-pattern>
-    <url-pattern>/control/*</url-pattern>
-    <url-pattern>/hello/*</url-pattern>
-    <url-pattern>/again/*</url-pattern>
-    <url-pattern>/tiny/*</url-pattern>
-    <url-pattern>/mini/*</url-pattern>
-    <url-pattern>/full/*</url-pattern>
-    <url-pattern>/velocity/*</url-pattern>
-    <url-pattern>/velocity-dev/*</url-pattern>
-    <url-pattern>/ved/*</url-pattern>
-    <url-pattern>/bwq/*</url-pattern>
-    <url-pattern>/api-config/*</url-pattern>
-    <url-pattern>/control/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 
   <servlet-mapping>
