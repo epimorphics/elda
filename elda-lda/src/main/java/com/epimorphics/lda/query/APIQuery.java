@@ -20,6 +20,7 @@ import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.exceptions.APIException;
+import com.epimorphics.lda.exceptions.BadRequestException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -644,6 +645,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
     public void setSortBy(String orderSpecs) {
         if (sortByOrderSpecsFrozen)
             EldaException.Broken("Elda attempted to set a sort order after generating the select query.");
+        if (fixedSelect != null)
+            throw new BadRequestException("Unable to sort query with a fixed selection.");
         sortByOrderSpecs = orderSpecs;
     }
 
