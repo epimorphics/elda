@@ -552,6 +552,47 @@ public class RouterRestlet {
 
     public static URI makeRequestURI(UriInfo ui, Boolean enableForwardHeaders, String base, HttpServletRequest request) {
         URI requestUri = ui.getRequestUri();
+        String fwHost = null;
+        String fwScheme = null;
+        if (enableForwardHeaders) {
+            fwHost = request.getHeader("X-Forwarded-Host");
+            fwScheme = request.getHeader("X-Forwarded-Proto");
+        }
+        String baseScheme = null;
+        String baseHost = null;
+        Integer basePort = null;
+        String basePath = null;
+        if (base != null) {
+            URI baseUri = URIUtils.newURI(base);
+            baseScheme = baseUri.getScheme();
+            baseHost = baseUri.getHost();
+            basePort = baseHost != null ? baseUri.getPort() : null;
+            basePath = baseUri.getPath();
+        }
+        String scheme = baseScheme != null ? baseScheme : fwScheme;
+        String host = baseHost != null ? baseHost : fwHost;
+        Integer port = basePort != null ? basePort : (fwHost != null ? null : requestUri.getPort());
+
+        if (base == null && scheme == null && host == null) {
+            return requestUri;
+        }
+
+        UriBuilder builder = UriBuilder.newInstance();
+        if (scheme != null) builder.scheme(scheme);
+        if (host != null) {
+            URI hostUri = URIUtils.newURI("//" + host);
+            builder.host(hostUri.getHost()).port(hostUri.getPort());
+        } else {
+            builder.host(requestUri.getHost());
+        }
+        if (port != null) builder.port(port);
+        if (basePath != null) builder.path(basePath);
+
+        return URIUtils.resolveAgainstBase(requestUri, builder.build(), ui.getPath());
+    }
+
+    public static URI zmakeRequestURI(UriInfo ui, Boolean enableForwardHeaders, String base, HttpServletRequest request) {
+        URI requestUri = ui.getRequestUri();
 
         base = base == null ? "" : base;
         URI baseUri = URIUtils.newURI(base);
