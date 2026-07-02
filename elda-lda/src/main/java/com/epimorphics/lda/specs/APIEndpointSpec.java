@@ -230,7 +230,7 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
      * (any properties are ignored). Otherwise a view is constructed,
      * given a name, installed into the view table, and returned.
      */
-    private View getView(Resource v) {
+    private View getView(Resource v, Set<Resource> seen) {
         View builtin = View.getBuiltin(v);
         if (builtin == null) {
             String viewName = getNameWithFallback(v);
@@ -238,10 +238,14 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
                 String t = v.getProperty(API.template).getString();
                 return View.newTemplateView(viewName, t);
             } else {
-                return getViewByProperties(v.getModel(), viewName, v);
+                return getViewByProperties(viewName, v, seen);
             }
-        } else
+        } else {
             return builtin;
+        }
+    }
+    private View getView(Resource v) {
+        return getView(v, new HashSet<>());
     }
 
     private String getNameWithFallback(Resource tRes) {
@@ -257,21 +261,24 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
             return ifAbsent;
     }
 
-    private View getViewByProperties(Model m, String name, Resource tRes) {
-        return addViewProperties(m, new HashSet<Resource>(), tRes, new View(name));
+    private View getViewByProperties(String name, Resource tRes, Set<Resource> seen) {
+        return addViewProperties(seen, tRes, new View(name));
     }
 
     /**
      * Add properties to the view, setting the property chains and possibly
      * the labelled-describe label property URI.
      */
-    private View addViewProperties(Model m, Set<Resource> seen, Resource tRes, View v) {
+    private View addViewProperties(Set<Resource> seen, Resource tRes, View v) {
+        Model m = tRes.getModel();
         setDescribeLabelIfPresent(tRes, v);
         addViewPropertiesByString(v, m.listObjectsOfProperty(tRes, API.properties).toList());
         addViewPropertiesByResource(v, m.listObjectsOfProperty(tRes, API.property).toList());
         for (RDFNode n : tRes.listProperties(API.include).mapWith(Statement::getObject).toList()) {
-            if (n.isResource() && seen.add((Resource) n))
-                addViewProperties(m, seen, (Resource) n, v);
+            if (n.isResource() && seen.add((Resource) n)) {
+                View includeView = getView(n.asResource(), seen);
+                v.addFrom(includeView);
+            }
         }
         return v;
     }
