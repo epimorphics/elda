@@ -61,8 +61,9 @@ public class RendererFactoriesSpec {
                         "no renderer type for "
                                 + (name != null ? name
                                 : mt != null ? ("spec with mime type " + mt)
-                                : "node " + r.toString())
+                                : "node " + r)
                 );
+        if (mt == null) mt = MediaType.TEXT_PLAIN;
         RendererFactory rfx = BuiltinRendererTable.getFactory(type);
         RendererFactory fac = pickFactory(className, rfx);
         result.putFactory(name, r, mt, fac, isDefault, jsonUsesISOdate);
@@ -83,7 +84,7 @@ public class RendererFactoriesSpec {
     private static MediaType getMimeType(Resource r) {
         return r.hasProperty(API.mimeType)
                 ? MediaType.decodeType(r.getProperty(API.mimeType).getString())
-                : MediaType.TEXT_PLAIN;
+                : null;
     }
 
     private static RendererFactory pickFactory(String className, RendererFactory rfx) {
