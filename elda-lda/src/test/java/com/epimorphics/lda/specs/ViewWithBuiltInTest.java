@@ -19,7 +19,35 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class ViewWithBuiltInTest {
-    private Model model() {
+    @Test
+    public void viewWithoutBuiltInDescribe_isChains() {
+        String ttl = """
+                \
+                PREFIX : <http://example.org/test/>
+                PREFIX api: <http://purl.org/linked-data/api/vocab#>
+                :labelledConceptViewer a api:Viewer
+                    ; api:name "concept_labelled"
+                    ; api:property
+                      ( :broader :prefLabel ),
+                      ( :narrower :prefLabel )
+                    .""";
+        Model m = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(m, new ByteArrayInputStream(ttl.getBytes(StandardCharsets.UTF_8)), Lang.TTL);
+        ShortnameService sns = mock(ShortnameService.class);
+
+        Resource res = m.getResource("http://example.org/test/labelledConceptViewer");
+        View v = new ViewBuilder(sns).build(res);
+        List<PropertyChain> pcs = v.chains().stream().sorted(comparing(PropertyChain::toString)).toList();
+
+        assertEquals("concept_labelled", v.name());
+        assertEquals(View.Type.T_CHAINS, v.getType());
+        assertEquals(2, pcs.size());
+        assertEquals("[http://example.org/test/broader, http://example.org/test/prefLabel]", pcs.get(0).toString());
+        assertEquals("[http://example.org/test/narrower, http://example.org/test/prefLabel]", pcs.get(1).toString());
+    }
+
+    @Test
+    public void viewIncludesBuiltInDescribe_becomesDescribe() {
         String ttl = """
                 \
                 PREFIX : <http://example.org/test/>
@@ -33,13 +61,8 @@ public class ViewWithBuiltInTest {
                     .""";
         Model m = ModelFactory.createDefaultModel();
         RDFDataMgr.read(m, new ByteArrayInputStream(ttl.getBytes(StandardCharsets.UTF_8)), Lang.TTL);
-        return m;
-    }
-
-    @Test
-    public void testThing() {
         ShortnameService sns = mock(ShortnameService.class);
-        Model m = model();
+
         Resource res = m.getResource("http://example.org/test/labelledConceptViewer");
         View v = new ViewBuilder(sns).build(res);
         List<PropertyChain> pcs = v.chains().stream().sorted(comparing(PropertyChain::toString)).toList();
@@ -49,6 +72,5 @@ public class ViewWithBuiltInTest {
         assertEquals(2, pcs.size());
         assertEquals("[http://example.org/test/broader, http://example.org/test/prefLabel]", pcs.get(0).toString());
         assertEquals("[http://example.org/test/narrower, http://example.org/test/prefLabel]", pcs.get(1).toString());
-
     }
 }
