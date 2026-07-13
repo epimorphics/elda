@@ -574,7 +574,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
     }
 
     private Variable varForChain(StringBuilder chainName) {
-        String namePart = chainName.toString().replaceAll("\\.", "_");
+        String namePart = chainName.toString().replaceAll("\\.", "_").replaceAll("-", "_");
         return RDFQ.var(PREFIX_VAR + namePart + "_" + varcount++);
     }
 
