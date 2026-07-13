@@ -573,7 +573,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
     }
 
     private Variable varForChain(StringBuilder chainName) {
-        String namePart = chainName.toString().replaceAll("\\.", "_").replace("-", "_");
+        String namePart = chainName.toString().replaceAll("\\.", "_").replaceAll("-", "_");
         return RDFQ.var(PREFIX_VAR + namePart + "_" + varcount++);
     }
 
@@ -1018,7 +1018,6 @@ public class APIQuery implements VarSupply, WantsMetadata {
         //
         c.times.setSelectQuerySize(selectQuery);
         //
-        System.out.print(selectQuery);
         Query q = createQuery(selectQuery);
         if (log.isDebugEnabled()) {
             log.debug("running query: {}", selectQuery.replaceAll("\n", " "));
