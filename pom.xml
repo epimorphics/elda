@@ -136,7 +136,7 @@
       <artifactId>junit</artifactId>
       <version>${ver.junit}</version>
       <type>jar</type>
-      <scope>compile</scope>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -168,11 +168,6 @@
           <artifactId>jackson-databind</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>tools.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>3.2.1</version>
     </dependency>
 
     <dependency>
