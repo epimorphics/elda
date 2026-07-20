@@ -18,7 +18,7 @@
   </scm>
 
   <properties>
-    <tempSCM>/tmp/tempSCM</tempSCM>
+    <tempSCM>git@github.com:epimorphics/elda.git</tempSCM>
     <project.tagname/>
 
     <ver.jena>5.6.0</ver.jena>
