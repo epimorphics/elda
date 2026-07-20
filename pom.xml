@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.1</version>
   <packaging>pom</packaging>
   <name>elda</name>
   <description>Top level linked data API project</description>
@@ -14,12 +13,12 @@
     <connection>scm:git:${tempSCM}</connection>
     <developerConnection>scm:git:${tempSCM}</developerConnection>
     <url>scm:git:${tempSCM}</url>
-    <tag>HEAD</tag>
+    <tag>elda-3.0.1</tag>
   </scm>
 
   <properties>
     <tempSCM>git@github.com:epimorphics/elda.git</tempSCM>
-    <project.tagname/>
+    <project.tagname />
 
     <ver.jena>5.6.0</ver.jena>
     <ver.junit>4.13.2</ver.junit>
