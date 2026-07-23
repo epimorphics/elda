@@ -76,22 +76,17 @@ public class LogRequestFilter implements Filter {
             String headerID = httpRequest.getHeader(X_REQUEST_ID);
             String paramID = httpRequest.getParameter(QueryParameter._QUERY_ID);
 
-            long requestCount = queryCount.incrementAndGet();
-            String seqId = Long.toString(requestCount);
-
             if (useID) {
                 if (ID == null) ID = paramID;
                 if (ID == null) ID = headerID;
             }
-            if (ID == null) ID = generateID(httpRequest);
 
-            String fullID = ID.replace("*", seqId);
-            MDC.put("request_id", fullID);
+            if (ID != null) {
+                MDC.put("request_id", ID);
+                httpResponse.addHeader(X_RESPONSE_ID, ID);
+            }
 
             log.info("Request {}", fullPath);
-
-            httpResponse.addHeader(X_RESPONSE_ID, fullID);
-
             long startTime = System.currentTimeMillis();
             chain.doFilter(request, response);
             long endTime = System.currentTimeMillis();
@@ -103,14 +98,10 @@ public class LogRequestFilter implements Filter {
                     , NameUtils.formatDuration(endTime - startTime)
             );
 
-            MDC.remove("request_id");
+            if (ID != null) {
+                MDC.remove("request_id");
+            }
         }
-    }
-
-    private String generateID(HttpServletRequest req) {
-        // return UUID_V1.generate().toString();
-        String envID = System.getenv("ELDA_INSTANCE_ID");
-        return envID == null ? "host " + req.getLocalAddr() + ":*" : envID;
     }
 
     // The check for NoSuchMethodError is because Tomcat6 doesn't have a
