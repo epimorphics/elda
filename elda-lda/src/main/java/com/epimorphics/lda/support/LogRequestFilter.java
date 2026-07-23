@@ -82,8 +82,8 @@ public class LogRequestFilter implements Filter {
             }
 
             if (ID != null) {
-                MDC.put("request_id", fullID);
-                httpResponse.addHeader(X_RESPONSE_ID, fullID);
+                MDC.put("request_id", ID);
+                httpResponse.addHeader(X_RESPONSE_ID, ID);
             }
 
             log.info("Request {}", fullPath);
