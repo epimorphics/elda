@@ -76,16 +76,12 @@ public class LogRequestFilter implements Filter {
             String headerID = httpRequest.getHeader(X_REQUEST_ID);
             String paramID = httpRequest.getParameter(QueryParameter._QUERY_ID);
 
-            long requestCount = queryCount.incrementAndGet();
-            String seqId = Long.toString(requestCount);
-
             if (useID) {
                 if (ID == null) ID = paramID;
                 if (ID == null) ID = headerID;
             }
 
             if (ID != null) {
-                String fullID = ID.replace("*", seqId);
                 MDC.put("request_id", fullID);
                 httpResponse.addHeader(X_RESPONSE_ID, fullID);
             }
