@@ -87,6 +87,14 @@ public class RouterRestletTest {
     }
 
     @Test
+    public void makeRequestURI_withContextPath_withoutBase_withoutForward_returnsRequestUri() {
+        URI result = new RequestURIScenario()
+                .withRequestUri("https://test.org/api/request")
+                .run();
+        assertEquals("https://test.org/api/request", result.toString());
+    }
+
+    @Test
     public void makeRequestURI_ForwardHeadersDisabled_WithAbsoluteBase_ReturnsBaseUri() {
         URI result = new RequestURIScenario()
                 .withEnabled(false)
@@ -123,8 +131,11 @@ public class RouterRestletTest {
         private final HttpServletRequest request = mock(HttpServletRequest.class);
 
         RequestURIScenario() {
-            when(ui.getRequestUri()).thenReturn(requestUri);
-            when(ui.getPath()).thenReturn("/request");
+        }
+
+        RequestURIScenario withRequestUri(String uri) {
+            requestUri = URIUtils.newURI(uri);
+            return this;
         }
 
         RequestURIScenario withEnabled(Boolean enabled) {
@@ -144,6 +155,8 @@ public class RouterRestletTest {
         }
 
         URI run() {
+            when(ui.getRequestUri()).thenReturn(requestUri);
+            when(ui.getPath()).thenReturn("/request");
             return RouterRestlet.makeRequestURI(ui, enabled, base, request);
         }
     }
