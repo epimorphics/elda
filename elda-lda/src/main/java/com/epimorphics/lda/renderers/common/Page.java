@@ -522,12 +522,22 @@ public class Page extends CommonNodeWrapper {
 
             RDFNodeWrapper n = new CommonNodeWrapper(getModelW(), RDFUtil.asRDFNode(filterValue));
 
-            if (shortNameRenderer().isKnownShortnamePath(filterPath)) {
+            if (isFilterParam(p.name()) || shortNameRenderer().isKnownShortnamePath(filterPath)) {
                 links.add(createRemovalLink(eu, p.name(), p.name(), filterValue, StringEscapeUtils.escapeHtml4(n.getName())));
             }
         }
 
         return links;
+    }
+
+    private boolean isFilterParam(String param) {
+        return param.startsWith(QueryParameter.MIN_PREFIX)
+                || param.startsWith(QueryParameter.MIN_EX_PREFIX)
+                || param.startsWith(QueryParameter.MAX_PREFIX)
+                || param.startsWith(QueryParameter.MAX_EX_PREFIX)
+                || param.startsWith(QueryParameter.EXISTS_PREFIX)
+                || param.startsWith(QueryParameter.NAME_PREFIX)
+                || param.startsWith(QueryParameter.LANG_PREFIX);
     }
 
     /**
