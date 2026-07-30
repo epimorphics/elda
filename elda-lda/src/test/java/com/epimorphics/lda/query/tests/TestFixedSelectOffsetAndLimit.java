@@ -9,6 +9,7 @@ package com.epimorphics.lda.query.tests;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
+import com.epimorphics.lda.exceptions.BadRequestException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -19,6 +20,7 @@ import com.epimorphics.lda.tests_support.MakeData;
 import org.apache.jena.shared.PrefixMapping;
 import org.junit.Test;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
 public class TestFixedSelectOffsetAndLimit {
@@ -28,6 +30,13 @@ public class TestFixedSelectOffsetAndLimit {
         ensureOffsetAndLimit("SELECTION OFFSET 100 LIMIT 10", "_select=SELECTION&_page=10");
         ensureOffsetAndLimit("SELECTION OFFSET 20 LIMIT 2", "_select=SELECTION&_page=10&_pageSize=2");
         ensureOffsetAndLimit("SELECTION OFFSET 21 LIMIT 3", "_select=SELECTION&_page=7&_pageSize=3");
+    }
+
+    @Test
+    public void testSortParam() {
+        assertThrows(BadRequestException.class, () -> {
+                ensureOffsetAndLimit("SELECTION OFFSET 100 LIMIT 10", "_select=SELECTION&_page=10&_sort=label");
+        });
     }
 
     private void ensureOffsetAndLimit(String expected, String queryArgs) {

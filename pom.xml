@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.4-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>elda</name>
   <description>Top level linked data API project</description>
@@ -18,22 +17,23 @@
   </scm>
 
   <properties>
-    <tempSCM>/tmp/tempSCM</tempSCM>
-    <project.tagname/>
+    <tempSCM>git@github.com:epimorphics/elda.git</tempSCM>
+    <project.tagname />
 
     <ver.jena>5.6.0</ver.jena>
     <ver.junit>4.13.2</ver.junit>
-    <ver.jersey>3.1.11</ver.jersey>
+    <ver.jersey>3.1.12</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>2.0.17</ver.slf4j>
     <ver.velocity>2.4.1</ver.velocity>
     <ver.wagon>2.2</ver.wagon>
     <ver.xmlunit>1.4</ver.xmlunit>
+    <ver.jackson>2.22.1</ver.jackson>
     <jdk.version>21</jdk.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
-    <tomcat.version>11.0.15</tomcat.version>
+    <tomcat.version>11.0.21</tomcat.version>
   </properties>
 
   <build>
@@ -135,7 +135,7 @@
       <artifactId>junit</artifactId>
       <version>${ver.junit}</version>
       <type>jar</type>
-      <scope>compile</scope>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -155,7 +155,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.20</version>
+      <version>1.5.25</version>
     </dependency>
     <dependency>
       <groupId>net.logstash.logback</groupId>
