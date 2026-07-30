@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -205,7 +206,7 @@ public class VelocityRendering
      * @return A new Velocity engine
      */
     public VelocityEngine createVelocityEngine() {
-        List<String> velocityPath = expandVelocityPath(bindings);
+        List<String> velocityPath = expandVelocityPath(bindings, System.getenv(VELOCITY_PATH_ENV_VAR));
 
         Properties p = getProperties(velocityPath);
         VelocityEngine ve = new VelocityEngine();
@@ -232,51 +233,55 @@ public class VelocityRendering
      *
      * @return An array of expanded file paths or other URLs where we will search for Velocity assets
      */
-    protected List<String> expandVelocityPath(Bindings b) {
+    public static List<String> expandVelocityPath(Bindings b, String envRoot) {
         List<String> roots = new ArrayList<>();
-        String userRootPath = b.getAsString(VELOCITY_PATH_CONFIG_PARAM, null);
+        String velocityPath = b.getAsString(VELOCITY_PATH_CONFIG_PARAM, null);
 
-        String rootPath =
-                (userRootPath == null ? "" : userRootPath + ",")
-                        + etcPath()
-                        + webappPath()
-                        + defaultVelocityRoot();
-
-        for (String pathEntry : StringUtils.split(rootPath, ",")) {
-            pathEntry = StringUtils.trim(pathEntry);
-            String pathURL = b.pathAsURL(pathEntry).toString();
-            roots.add(pathURL + (pathURL.endsWith("/") ? "" : "/"));
+        List<String> rawRoots = new ArrayList<>();
+        if (velocityPath != null) {
+            Collections.addAll(rawRoots, StringUtils.split(velocityPath, ","));
         }
-        log.debug("rootPath '{}'", rootPath);
+        rawRoots.add(etcPath(b));
+        rawRoots.add(webappPath());
+        rawRoots.addAll(defaultVelocityRoots(envRoot));
+
+        for (String rawRoot : rawRoots) {
+            rawRoot = StringUtils.trim(rawRoot);
+            if (!rawRoot.isEmpty()) {
+                String pathURL = b.pathAsURL(rawRoot).toString();
+                roots.add(pathURL + (pathURL.endsWith("/") ? "" : "/"));
+            }
+        }
+        log.debug("rootPath '{}'", String.join(",", rawRoots));
         log.debug("complete expanded path '{}'", roots);
         return roots;
     }
 
-    private String webappPath() {
+    private static String webappPath() {
         return "_error_pages/";
     }
 
-    private String etcPath() {
+    private static String etcPath(Bindings bindings) {
         String context = bindings
                 .getAsString("_rootPath", "NO_ROOTPATH")
                 .replaceAll("/([^/]*)/.*", "$1");
         String appPath = "/etc/elda/conf.d/REPLACE/_error_pages".replace("REPLACE", context);
         List<File> files = new Glob().filesMatching(appPath);
-        return (files.size() == 0 ? "" : files.get(0)) + ",";
+        return (files.isEmpty() ? "" : files.getFirst().toString());
     }
 
     /**
      * @return The default Velocity root directory, which may set by an environment variable
      */
-    protected String defaultVelocityRoot() {
-        String envRoot = null;
-        try {
-            envRoot = System.getenv(VELOCITY_PATH_ENV_VAR);
-        } catch (SecurityException ignore) {
-            // not allowed to read the environment, no biggie
+    protected static List<String> defaultVelocityRoots(String envRoot) {
+        List<String> roots = new ArrayList<>();
+        if (envRoot == null) {
+            roots.add(DEFAULT_VELOCITY_ROOT_PATH);
+        } else {
+            Collections.addAll(roots, envRoot.split(","));
         }
 
-        return (envRoot == null) ? DEFAULT_VELOCITY_ROOT_PATH : envRoot;
+        return roots;
     }
 
     /**
