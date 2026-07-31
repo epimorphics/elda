@@ -63,7 +63,7 @@ public class VelocityRendering
     /**
      * The default place we look for Velocity files
      */
-    public static final String DEFAULT_VELOCITY_ROOT_PATH = "/velocity/";
+    public static final String DEFAULT_VELOCITY_ROOT_PATH = "velocity/";
 
     /**
      * The configuration parameter which sets an alternative location for Velocity templates etc
@@ -242,7 +242,6 @@ public class VelocityRendering
             Collections.addAll(rawRoots, StringUtils.split(velocityPath, ","));
         }
         rawRoots.add(etcPath(b));
-        rawRoots.add(webappPath());
         rawRoots.addAll(defaultVelocityRoots(envRoot));
 
         for (String rawRoot : rawRoots) {
@@ -276,7 +275,7 @@ public class VelocityRendering
     protected static List<String> defaultVelocityRoots(String envRoot) {
         List<String> roots = new ArrayList<>();
         if (envRoot == null) {
-            roots.add(DEFAULT_VELOCITY_ROOT_PATH);
+            roots.add(webappPath() + DEFAULT_VELOCITY_ROOT_PATH);
         } else {
             Collections.addAll(roots, envRoot.split(","));
         }
