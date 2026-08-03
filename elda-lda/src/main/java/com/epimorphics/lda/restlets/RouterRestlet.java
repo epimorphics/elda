@@ -595,7 +595,7 @@ public class RouterRestlet {
 
     private static final String STARTS_WITH_SCHEME = "^" + MATCHES_SCHEME + ".*";
 
-    private static URLforResource pathAsURLFactory(final ServletContext servCon) {
+    public static URLforResource pathAsURLFactory(final ServletContext servCon) {
         return new URLforResource() {
             @Override
             public URL asResourceURL(String ePath) {
