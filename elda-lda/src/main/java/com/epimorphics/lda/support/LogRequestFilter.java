@@ -82,24 +82,31 @@ public class LogRequestFilter implements Filter {
             }
 
             if (ID != null) {
-                MDC.put("request_id", ID);
+                MDC.put(MDCParam.RequestId.name, ID);
                 httpResponse.addHeader(X_RESPONSE_ID, ID);
             }
+            MDC.put(MDCParam.RequestUri.name, fullPath);
+            MDC.put(MDCParam.RequestStatus.name, RequestStatus.Received.name);
 
             log.info("Request {}", fullPath);
+            MDC.put(MDCParam.RequestStatus.name, RequestStatus.Processing.name);
             long startTime = System.currentTimeMillis();
             chain.doFilter(request, response);
             long endTime = System.currentTimeMillis();
-
             int status = getStatus(httpResponse);
+            long requestTimeMs = endTime - startTime;
+            MDC.put(MDCParam.StatusCode.name, "" + status);
+            MDC.put(MDCParam.RequestTime.name, "" + requestTimeMs);
+            MDC.put(MDCParam.RequestStatus.name, RequestStatus.Completed.name);
+
             log.info("Response {} {} {}"
                     , fullPath
                     , status < 0 ? "(status unknown)" : "" + status
-                    , NameUtils.formatDuration(endTime - startTime)
+                    , NameUtils.formatDuration(requestTimeMs)
             );
 
-            if (ID != null) {
-                MDC.remove("request_id");
+            for (MDCParam param: MDCParam.values()) {
+                MDC.remove(param.name);
             }
         }
     }
@@ -118,5 +125,4 @@ public class LogRequestFilter implements Filter {
     @Override
     public void destroy() {
     }
-
 }
