@@ -1,4 +1,19 @@
 + ---------------------------------------------------------------------
+| Elda 3.0.4 (RELEASED)
+
+Enhancements
+
+* Add JSON logging support and standard MDC fields.
+
+Bug fixes and minor dependency updates
+
+* Fix description of non existent formatter node in error message. [#114](https://github.com/epimorphics/elda/issues/114)
+* Support inclusion of builtin viewers on view specs. [#146](https://github.com/epimorphics/elda/issues/146)
+* Fix velocity path resolution. [#175](https://github.com/epimorphics/elda/issues/175)
+* Fix filter removal link on UI. [#202](https://github.com/epimorphics/elda/issues/202)
+* Fix references to non existent CSS and font files. [#204](https://github.com/epimorphics/elda/issues/204) [#205](https://github.com/epimorphics/elda/issues/205)
+
++ ---------------------------------------------------------------------
 | Elda 3.0.0 (RELEASED)
 
 Major security and dependency updates
